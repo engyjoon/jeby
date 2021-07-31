@@ -2,4 +2,5 @@ from .base import *
 
 DEBUG = False
 
-STATIC_ROOT = os.path.join(BASE_DIR, '_static')
+STATIC_ROOT = BASE_DIR / '_static/'
+STATICFILES_DIRS = []
