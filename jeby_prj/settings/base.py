@@ -49,14 +49,14 @@ ALLOWED_HOSTS.append(get_secret('ALLOWED_HOST1'))
 # Application definition
 
 INSTALLED_APPS = [
-    'common',
-    'single_pages',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'common',
+    'news',
 ]
 
 MIDDLEWARE = [
