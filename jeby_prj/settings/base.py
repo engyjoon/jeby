@@ -49,13 +49,14 @@ ALLOWED_HOSTS.append(get_secret('ALLOWED_HOST1'))
 # Application definition
 
 INSTALLED_APPS = [
+    'common',
+    'single_pages',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'single_pages',
 ]
 
 MIDDLEWARE = [
@@ -152,3 +153,5 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = '/'
