@@ -7,7 +7,7 @@
 {% endblock custom_css %}
 
 {% block body %}
-<body>
+<body class="d-flex flex-column h-100">
     <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light border-bottom border-1">
         <div class="container">
             <a class="navbar-brand" href="{% url 'common:index' %}">
@@ -23,7 +23,7 @@
                 </li>
                 {% endcomment %}
             </ul>
-            
+
             <form class="d-flex">
                 <a href="{% url 'common:logout' %}" class="btn btn-outline-secondary" type="button" id="nav-button">
                     {% if user.is_authenticated %}
@@ -35,10 +35,20 @@
         </div>
     </nav>
 
-    <main class="container">
-    {% block content %}
+    <main class="flex-shrink-0">
+        <div class="container">
+            {% block content %}
 
-    {% endblock content %}
+            {% endblock content %}
+        </div>
     </main>
+
+    {% block footer %}
+    <footer class="footer mt-auto py-2 bg-light border-top border-1">
+        <div class="container text-center">
+            <span class="text-muted">@ 2021 engyjoon</span>
+        </div>
+    </footer>
+    {% endblock footer %}
 </body>
 {% endblock body %}
