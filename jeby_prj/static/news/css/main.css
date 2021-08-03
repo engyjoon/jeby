@@ -1,0 +1,29 @@
+/* Show it is fixed to the top */
+body {
+  /* min-height: 75rem; */
+  padding-top: 4.5rem;
+}
+
+.navbar-brand span {
+    color: #80808f; 
+    font-weight: bold;
+}
+
+/* #nav-button {
+    background-color: #e4e6ef; 
+    color: #7e8299;
+} */
+
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+@media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+    }
+}

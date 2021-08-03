@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="{% static 'news/css/main.css' %}"/>
+{% endblock custom_css %}
+
+{% block body %}
+<body>
+    <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light border-bottom border-1">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'common:index' %}">
+                <img src="{% static 'images/swallow_152px.png' %}" alt="" height="31" 
+                    class="d-inline-block align-text-top">
+                <span>Jeby</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" 
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                {% comment %}
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                {% endcomment %}
+            </ul>
+            <form class="d-flex">
+                <a href="{% url 'common:logout' %}" class="btn btn-outline-secondary" type="button" id="nav-button">
+                    {% if user.is_authenticated %}
+                        logout
+                    {% endif %}
+                </a>
+            </form>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+    {% block content %}
+
+    {% endblock content %}
+    </main>
+</body>
+{% endblock body %}
