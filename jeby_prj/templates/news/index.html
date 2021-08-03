@@ -2,6 +2,42 @@
 
 {% load static %}
 
+{% block custom_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'common/css/news_index.css' %}"/>
+{% endblock custom_css %}
+
 {% block content %}
-test
+<div class="container d-flex align-items-center h-100" id="search-box">
+    <div class="d-flex flex-column w-100">
+        <div class="row mb-1">
+            <div class="col text-center">
+                <p class="h4" id="search-title">뉴스 검색 키워드를 입력하세요.</p>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-body" id="keyword-box">
+                        <form action="{% url 'news:search' %}" method="get">
+                            {% csrf_token %}
+                            <div class="d-flex flex-row">
+                                {% comment %} <div class="keyword">kt<img src="{% static 'images/multiply_capture.jpg' %}"></div> {% endcomment %}
+                                <div class="flex-grow-1">
+                                    <input type="text" class="form-control" name="keyword">
+                                </div>
+                                <div class="me-2"><span id="search-img"><i class="fas fa-search"></i></span></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-outline-secondary">키워드 그룹</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}

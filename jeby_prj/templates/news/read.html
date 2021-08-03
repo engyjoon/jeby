@@ -1,0 +1,16 @@
+{% extends 'base_news.html' %}
+
+{% load static %}
+
+{% block custom_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'common/css/news_index.css' %}"/>
+{% endblock custom_css %}
+
+{% block content %}
+<div class="container d-flex align-items-center h-100" id="search-box">
+    <div class="d-flex flex-column w-100">
+ 
+    </div>
+</div>
+{% endblock content %}
