@@ -10,7 +10,7 @@
 {% block content %}
 <div class="container d-flex align-items-center h-100" id="search-box">
     <div class="d-flex flex-column w-100">
-        <form action="{% url 'news:search' %}" method="get">
+        <form action="{% url 'news:search' %}" method="post">
             {% csrf_token %}
             <div class="row mb-1">
                 <div class="col text-center">
@@ -21,14 +21,14 @@
                 <div class="col">
                     <div class="card shadow-sm">
                         <div class="card-body" id="keyword-box">
-                                <div class="d-flex flex-row">
-                                    {% comment %} <div class="keyword">kt<img src="{% static 'images/multiply_capture.jpg' %}"></div> {% endcomment %}
-                                    <button type="button" class="btn btn-secondary" id="btn-keyword-group">키워드그룹</button>
-                                    <div class="flex-grow-1">
-                                        <input type="text" class="form-control" name="keyword">
-                                    </div>
-                                    <div class="me-2"><span id="search-img"><i class="fas fa-search"></i></span></div>
+                            <div class="d-flex flex-row">
+                                {% comment %} <div class="keyword">kt<img src="{% static 'images/multiply_capture.jpg' %}"></div> {% endcomment %}
+                                <button type="button" class="btn btn-secondary" id="btn-keyword-group">키워드그룹</button>
+                                <div class="flex-grow-1">
+                                    <input type="text" class="form-control" name="keyword">
                                 </div>
+                                <div class="me-2"><span id="search-img"><i class="fas fa-search"></i></span></div>
+                            </div>
                         </div>
                     </div>
                 </div>

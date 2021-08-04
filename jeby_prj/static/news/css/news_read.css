@@ -1,0 +1,52 @@
+#search-box {
+  /* min-height: 75rem; */
+  padding-top: 4.5rem;
+}
+
+#search-title {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
+    /* font-size: 2.5rem; */
+    color: #80808f;
+}
+
+.form-control,
+.form-control:focus {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    border: rgba(0, 0, 0, 0);
+}
+
+#btn-keyword-group,
+#btn-keyword-group:active {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+}
+
+#keyword-box {
+    padding: 5px;
+}
+
+.keyword {
+    height:32px;
+    border:1px solid black;
+    padding: 0px 10px;
+    margin: 0px 5px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+}
+
+#search-img {
+    font-size: 1.3rem;
+    color: #80808f;
+}
+
+.news-item {
+    border-bottom: 1px solid #C5D7E6;
+    padding: 7px 0px;
+    /* font-size: 1.5vw; */
+}
+
+.news-item:last-child {
+    border-width: 0px;
+    padding: 7px 0px;
+    /* font-size: 1.5vw; */
+}

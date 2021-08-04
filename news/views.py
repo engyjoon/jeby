@@ -17,12 +17,14 @@ def index(request):
 
 def news_search(request):
     """키워드로 뉴스를 검색한다."""
-    if request.method == 'GET':
-        result = naverapi.get_news(request.GET.get('keyword'))
-
-        print(result)
+    result = None
+    if request.method == 'POST':
+        result = naverapi.get_news(request.POST.get('keyword'))
 
     return render(
         request,
         'news/read.html',
+        {
+            'news': result
+        }
     )

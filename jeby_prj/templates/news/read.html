@@ -4,13 +4,60 @@
 
 {% block custom_css %}
     {{ block.super }}
-    <link rel="stylesheet" href="{% static 'news/css/news_index.css' %}"/>
+    <link rel="stylesheet" href="{% static 'news/css/news_read.css' %}"/>
 {% endblock custom_css %}
 
 {% block content %}
-<div class="container d-flex align-items-center h-100" id="search-box">
-    <div class="d-flex flex-column w-100">
- 
+<div class="container" id="search-box">
+    <div class="d-flex flex-column">
+        <form action="{% url 'news:search' %}" method="get">
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <div class="card-body" id="keyword-box">
+                            <div class="d-flex flex-row">
+                                {% comment %} <div class="keyword">kt<img src="{% static 'images/multiply_capture.jpg' %}"></div> {% endcomment %}
+                                <button type="button" class="btn btn-secondary" id="btn-keyword-group">키워드그룹</button>
+                                <div class="flex-grow-1">
+                                    <input type="text" class="form-control" name="keyword">
+                                </div>
+                                <div class="me-2"><span id="search-img"><i class="fas fa-search"></i></span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="row mb-3">
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        NAVER
+                    </div>
+                    <div class="card-body py-2">
+                        {% for new in news.naver %}
+                            <div class="news-item fs-6">{{ new.title|striptags|truncatechars:50 }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        기타 언론사
+                    </div>
+                    <div class="card-body py-2">
+                        {% for new in news.etc %}
+                            <div class="news-item fs-6">{{ new.title|striptags|truncatechars:50 }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock content %}

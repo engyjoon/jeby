@@ -1,7 +1,13 @@
 import json
+import re
 import urllib.request
 import urllib.parse
 from django.conf import settings
+
+
+news_list = {
+    'news.naver.com': 'naver',
+}
 
 
 def get_news(keyword):
@@ -9,7 +15,7 @@ def get_news(keyword):
 
     values = {
         'query': urllib.parse.quote(keyword),
-        'display': 10,
+        'display': 5,
         'start': 1,
         'sort': 'date',
     }
@@ -27,7 +33,24 @@ def get_news(keyword):
 
     if rescode == 200:
         response_body = response.read()
-        result = json.loads(response_body.decode('utf-8')).get('items')
+        items = json.loads(response_body.decode('utf-8')).get('items')
+
+        pattern = re.compile(r'^https?://([\w.-]*).*')
+
+        news_by_website = {}
+        for item in items:
+            website = pattern.search(item.get('link'))
+            link = website.group(1)
+
+            if link in news_list.keys():
+                link = news_list.get(link)
+            else:
+                link = 'etc'
+
+            news_by_website.setdefault(link, [])
+            news_by_website.get(link).append(item)
+
+        result = news_by_website
     else:
         result = None
 
