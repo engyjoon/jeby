@@ -42,11 +42,11 @@
 .news-item {
     border-bottom: 1px solid #C5D7E6;
     padding: 7px 0px;
-    /* font-size: 1.5vw; */
+    font-size: 1.2vw;
 }
 
 .news-item:last-child {
     border-width: 0px;
     padding: 7px 0px;
-    /* font-size: 1.5vw; */
+    font-size: 1.2vw;
 }

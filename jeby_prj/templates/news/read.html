@@ -19,7 +19,7 @@
                                 {% comment %} <div class="keyword">kt<img src="{% static 'images/multiply_capture.jpg' %}"></div> {% endcomment %}
                                 <button type="button" class="btn btn-secondary" id="btn-keyword-group">키워드그룹</button>
                                 <div class="flex-grow-1">
-                                    <input type="text" class="form-control" name="keyword">
+                                    <input type="text" class="form-control" name="keyword" autocomplete=off>
                                 </div>
                                 <div class="me-2"><span id="search-img"><i class="fas fa-search"></i></span></div>
                             </div>
@@ -29,6 +29,7 @@
             </div>
         </form>
 
+        {% if news.naver %}
         <div class="row mb-3">
             <div class="col">
                 <div class="card shadow-sm">
@@ -37,13 +38,15 @@
                     </div>
                     <div class="card-body py-2">
                         {% for new in news.naver %}
-                            <div class="news-item fs-6">{{ new.title|striptags|truncatechars:50 }}</div>
+                            <div class="news-item fs-6">{{ new.title|safe|truncatechars:50 }}</div>
                         {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
+        {% endif %}
 
+        {% if news.etc %}
         <div class="row">
             <div class="col">
                 <div class="card shadow-sm">
@@ -52,12 +55,13 @@
                     </div>
                     <div class="card-body py-2">
                         {% for new in news.etc %}
-                            <div class="news-item fs-6">{{ new.title|striptags|truncatechars:50 }}</div>
+                            <div class="news-item fs-6">{{ new.title|safe|truncatechars:50 }}</div>
                         {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
+        {% endif %}
     </div>
 </div>
 {% endblock content %}
