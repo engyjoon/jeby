@@ -1,6 +1,8 @@
-from urllib.parse import quote
+import urllib.parse
+import json
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from . import naverapi
 
 
 @login_required(login_url='common:login')
@@ -16,8 +18,9 @@ def index(request):
 def news_search(request):
     """키워드로 뉴스를 검색한다."""
     if request.method == 'GET':
-        keyword = quote(request.GET.get('keyword'))
-        print(keyword)
+        result = naverapi.get_news(request.GET.get('keyword'))
+
+        print(result)
 
     return render(
         request,

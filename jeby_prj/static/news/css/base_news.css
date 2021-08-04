@@ -1,8 +1,8 @@
 /* Show it is fixed to the top */
-body {
-  /* min-height: 75rem; */
-  /* padding-top: 2.5rem; */
-}
+/* body {
+  min-height: 75rem;
+  padding-top: 2.5rem;
+} */
 
 .navbar-brand span {
     color: #80808f; 
