@@ -8,7 +8,7 @@
 {% endblock custom_css %}
 
 {% block content %}
-<div class="container d-flex align-items-center h-100" id="search-box">
+<div class="container d-flex align-items-center h-75" id="search-box">
     <div class="d-flex flex-column w-100">
         <form action="{% url 'news:search' %}" method="post">
             {% csrf_token %}
@@ -32,8 +32,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row" style="height:300px;">
             </div>
         </form>
     </div>
