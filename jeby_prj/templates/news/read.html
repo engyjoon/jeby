@@ -10,7 +10,8 @@
 {% block content %}
 <div class="container" id="search-box">
     <div class="d-flex flex-column">
-        <form action="{% url 'news:search' %}" method="get">
+        <form action="{% url 'news:search' %}" method="post">
+            {% csrf_token %}
             <div class="row mb-3">
                 <div class="col">
                     <div class="card shadow-sm">
@@ -29,16 +30,24 @@
             </div>
         </form>
 
-        {% if news.naver %}
+        {% if news.major %}
         <div class="row mb-3">
             <div class="col">
                 <div class="card shadow-sm">
                     <div class="card-header">
-                        NAVER
+                        주요 언론사
                     </div>
                     <div class="card-body py-2">
-                        {% for new in news.naver %}
-                            <div class="news-item fs-6">{{ new.title|safe|truncatechars:50 }}</div>
+                        {% for new in news.major %}
+                            <div class="news-item fs-6">
+                                <a type="button" class="btn btn-sm btn-outline-secondary btn-site me-1">
+                                    {{ new.sitename }}
+                                </a>
+                                <a href="{{ new.originallink }}" target="_blask">
+                                    {{ new.title|safe|truncatechars:50 }}
+                                    <span class="badge bg-light text-dark">{{ new.pubDate }}</span>
+                                </a>
+                            </div>
                         {% endfor %}
                     </div>
                 </div>
@@ -47,7 +56,7 @@
         {% endif %}
 
         {% if news.etc %}
-        <div class="row">
+        <div class="row mb-3">
             <div class="col">
                 <div class="card shadow-sm">
                     <div class="card-header">
@@ -55,13 +64,32 @@
                     </div>
                     <div class="card-body py-2">
                         {% for new in news.etc %}
-                            <div class="news-item fs-6">{{ new.title|safe|truncatechars:50 }}</div>
+                            <div class="news-item fs-6">
+                                <a type="button" class="btn btn-sm btn-outline-secondary btn-site me-1">
+                                    등록하기
+                                </a>
+                                <a href="{{ new.originallink }}" target="_blask">
+                                    {{ new.title|safe|truncatechars:50 }}
+                                    <span class="badge bg-light text-dark">{{ new.pubDate }}</span>
+                                </a>
+                            </div>
                         {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
         {% endif %}
+
     </div>
 </div>
 {% endblock content %}
+
+{% block footer %}
+{% comment %} 
+<footer class="footer mt-auto py-2 bg-light border-top border-1">
+    <div class="container text-center">
+        <span class="text-muted">@ 2021 engyjoon</span>
+    </div>
+</footer>
+{% endcomment %}
+{% endblock footer %}

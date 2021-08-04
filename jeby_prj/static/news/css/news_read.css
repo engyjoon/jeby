@@ -41,12 +41,23 @@
 
 .news-item {
     border-bottom: 1px solid #C5D7E6;
-    padding: 7px 0px;
-    font-size: 1.2vw;
+    padding: 9px 0px;
 }
 
 .news-item:last-child {
     border-width: 0px;
-    padding: 7px 0px;
-    font-size: 1.2vw;
+}
+
+.news-item a {
+    text-decoration: none;
+    color: #6c757d;
+}
+
+.btn-site {
+    width: 80px;
+}
+
+.btn-site:hover {
+    background: #ffffff;
+    color: #80808f;
 }

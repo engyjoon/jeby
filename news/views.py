@@ -1,5 +1,4 @@
-import urllib.parse
-import json
+import pprint as pp
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from . import naverapi
@@ -20,11 +19,12 @@ def news_search(request):
     result = None
     if request.method == 'POST':
         result = naverapi.get_news(request.POST.get('keyword'))
+        pp.pprint(result)
 
     return render(
         request,
         'news/read.html',
         {
-            'news': result
+            'news': result,
         }
     )

@@ -6,7 +6,26 @@ from django.conf import settings
 
 
 news_list = {
-    'news.naver.com': 'naver',
+    'yna.kr': {
+        'id': 'yna',
+        'description': '연합뉴스',
+    },
+    'news.mk.co.kr': {
+        'id': 'mk',
+        'description': '매일경제',
+    },
+    'news.jtbc.joins.com': {
+        'id': 'jtbc',
+        'description': 'JTBC',
+    },
+    'www.hankyung.com': {
+        'id': 'hankyung',
+        'description': '한국경제',
+    },
+    'news.joins.com': {
+        'id': 'joins',
+        'description': '중앙일보',
+    },
 }
 
 
@@ -15,7 +34,7 @@ def get_news(keyword):
 
     values = {
         'query': urllib.parse.quote(keyword),
-        'display': 5,
+        'display': 50,
         'start': 1,
         'sort': 'date',
     }
@@ -39,16 +58,21 @@ def get_news(keyword):
 
         news_by_website = {}
         for item in items:
-            website = pattern.search(item.get('link'))
+            website = pattern.search(item.get('originallink'))
             link = website.group(1)
 
-            if link in news_list.keys():
-                link = news_list.get(link)
-            else:
-                link = 'etc'
+            item['pubDate'] = item['pubDate'].split()[4]
 
-            news_by_website.setdefault(link, [])
-            news_by_website.get(link).append(item)
+            if link in news_list.keys():
+                # siteid = news_list.get(link).get('id')
+                siteid = 'major'
+                item['sitename'] = news_list.get(link).get('description')
+            else:
+                siteid = 'etc'
+                item['sitename'] = 'etc'
+
+            news_by_website.setdefault(siteid, [])
+            news_by_website.get(siteid).append(item)
 
         result = news_by_website
     else:
