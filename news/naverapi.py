@@ -33,13 +33,14 @@ def get_news(keyword):
     """네이버 뉴스 API 호출 및 결과 반환"""
 
     values = {
-        'query': urllib.parse.quote(keyword),
+        'query': keyword,
         'display': 50,
         'start': 1,
         'sort': 'date',
     }
 
-    params = urllib.parse.urlencode(values)
+    params = urllib.parse.urlencode(values, quote_via=urllib.parse.quote)
+    print(params)
 
     url = "https://openapi.naver.com/v1/search/news.json?" + params
 
@@ -59,20 +60,22 @@ def get_news(keyword):
         news_by_website = {}
         for item in items:
             website = pattern.search(item.get('originallink'))
-            link = website.group(1)
 
-            item['pubDate'] = item['pubDate'].split()[4]
+            if website is not None:
+                link = website.group(1)
 
-            if link in news_list.keys():
-                # siteid = news_list.get(link).get('id')
-                siteid = 'major'
-                item['sitename'] = news_list.get(link).get('description')
-            else:
-                siteid = 'etc'
-                item['sitename'] = 'etc'
+                item['pubDate'] = item['pubDate'].split()[4]
 
-            news_by_website.setdefault(siteid, [])
-            news_by_website.get(siteid).append(item)
+                if link in news_list.keys():
+                    # siteid = news_list.get(link).get('id')
+                    siteid = 'major'
+                    item['sitename'] = news_list.get(link).get('description')
+                else:
+                    siteid = 'etc'
+                    item['sitename'] = 'etc'
+
+                news_by_website.setdefault(siteid, [])
+                news_by_website.get(siteid).append(item)
 
         result = news_by_website
     else:

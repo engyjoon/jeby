@@ -20,7 +20,7 @@
                                 {% comment %} <div class="keyword">kt<img src="{% static 'images/multiply_capture.jpg' %}"></div> {% endcomment %}
                                 <button type="button" class="btn btn-secondary" id="btn-keyword-group">키워드그룹</button>
                                 <div class="flex-grow-1">
-                                    <input type="text" class="form-control" name="keyword" autocomplete=off>
+                                    <input type="text" class="form-control" name="keyword" value="{{ form.keyword }}" autocomplete=off>
                                 </div>
                                 <div class="me-2"><span id="search-img"><i class="fas fa-search"></i></span></div>
                             </div>
@@ -43,8 +43,8 @@
                                 <a type="button" class="btn btn-sm btn-outline-secondary btn-site me-1">
                                     {{ new.sitename }}
                                 </a>
-                                <a href="{{ new.originallink }}" target="_blask">
-                                    {{ new.title|safe|truncatechars:50 }}
+                                <a href="{{ new.originallink }}" target="_blank">
+                                    <span class="news-title">{{ new.title|safe|truncatechars:50 }}</span>
                                     <span class="badge bg-light text-dark">{{ new.pubDate }}</span>
                                 </a>
                             </div>
@@ -68,8 +68,8 @@
                                 <a type="button" class="btn btn-sm btn-outline-secondary btn-site me-1">
                                     등록하기
                                 </a>
-                                <a href="{{ new.originallink }}" target="_blask">
-                                    {{ new.title|safe|truncatechars:50 }}
+                                <a href="{{ new.originallink }}" target="_blank">
+                                    <span>{{ new.title|safe|truncatechars:50 }}</span>
                                     <span class="badge bg-light text-dark">{{ new.pubDate }}</span>
                                 </a>
                             </div>

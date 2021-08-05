@@ -16,15 +16,20 @@ def index(request):
 
 def news_search(request):
     """키워드로 뉴스를 검색한다."""
-    result = None
+
+    form = {}
+
+    news = None
     if request.method == 'POST':
-        result = naverapi.get_news(request.POST.get('keyword'))
-        pp.pprint(result)
+        keyword = request.POST.get('keyword')
+        news = naverapi.get_news(keyword)
+        form['keyword'] = keyword
 
     return render(
         request,
         'news/read.html',
         {
-            'news': result,
+            'news': news,
+            'form': form,
         }
     )
