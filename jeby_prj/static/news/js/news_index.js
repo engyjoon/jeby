@@ -1,5 +1,7 @@
 $(document).ready(function () {
-    $('#search-img').click(function () {
-        $('#frm-search').submit();
+    $(".nav-link").eq(0).addClass("active");
+
+    $("#search-img").click(function () {
+        $("#frm-search").submit();
     });
 });
