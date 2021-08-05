@@ -32,10 +32,13 @@
                     id="toggle-button">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <a href="{% url 'common:logout' %}" class="btn btn-outline-secondary" type="button" id="nav-button">
+                <a href="{% url 'common:logout' %}" class="btn btn-outline-secondary nav-button me-2" type="button">
                     {% if user.is_authenticated %}
                         logout
                     {% endif %}
+                </a>
+                <a href="#" class="btn btn-outline-secondary nav-button" type="button">
+                    <i class="bi bi-gear"></i>
                 </a>
             </form>
         </div>
@@ -47,6 +50,14 @@
         </div>
     </nav>
 
+    <div class="container" id="error_msg">
+        <div class="row">
+            <div class="col">
+                {% include "errors.html" %}
+            </div>
+        </div>
+    </div>
+    
     <main class="h-100">
         {% block content %}
         {% endblock content %}
@@ -62,3 +73,8 @@
 
 </body>
 {% endblock body %}
+
+{% block script %}
+    {{ block.super }}
+
+{% endblock script %}
