@@ -196,3 +196,5 @@ $RECYCLE.BIN/
 
 # secret file
 */settings/secrets.json
+
+migrations/
