@@ -23,6 +23,11 @@
     padding: 8px 0px;
 }
 
+.nav-item-mobile a {
+    text-decoration: none;
+    color: #6c757d;
+}
+
 #toggle-button {
     border-color:#6c757d;
     box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);;
