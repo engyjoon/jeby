@@ -11,27 +11,30 @@
 <div class="container">
     <div class="row">
         <div class="col">
+            <div class="d-flex flex-row-reverse mb-2">
+                <a href="{% url 'news:keyword_create' %}" type="button" class="btn btn-sm btn-secondary">등록하기</a>
+            </div>
             <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col" style="width:200px;">관리명</th>
-                        <th scope="col">키워드</th>
-                        <th scope="col" style="width:70px;">메일</th>
-                        <th scope="col" style="width:70px;">공유</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for keyword in keyword_list %}
-                    <tr>
-                        <td scope="row">{{ keyword.title }}</td>
-                        <td>{{ keyword.content }}</td>
-                        <td>{{ keyword.mailing }}</td>
-                        <td>{{ keyword.shared }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width:200px;">관리명</th>
+                            <th scope="col">키워드</th>
+                            <th scope="col" style="width:70px;">메일</th>
+                            <th scope="col" style="width:70px;">공유</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for keyword in keyword_list %}
+                        <tr>
+                            <td scope="row">{{ keyword.title }}</td>
+                            <td>{{ keyword.content }}</td>
+                            <td>{{ keyword.mailing }}</td>
+                            <td>{{ keyword.shared }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

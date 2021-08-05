@@ -1,5 +1,5 @@
 import pprint as pp
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView, CreateView
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -49,3 +49,9 @@ def news_search(request):
 class KeywordList(LoginRequiredMixin, ListView):
     login_url = 'common:login'
     model = Keyword
+
+
+class KeywordCreate(LoginRequiredMixin, CreateView):
+    login_url = 'common:login'
+    model = Keyword
+    fields = ['title', 'content', 'mailing', 'shared']

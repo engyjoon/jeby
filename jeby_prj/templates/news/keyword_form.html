@@ -1,0 +1,28 @@
+{% extends 'base_news.html' %}
+
+{% load static %}
+
+{% block custom_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'news/css/keyword_form.css' %}"/>
+{% endblock custom_css %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <form method="post">
+                {% csrf_token %}
+                <table>
+                    {{ form }}
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+    {{ block.super }}
+    <script src="{% static 'news/js/keyword_form.js' %}"></script>
+{% endblock script %}
