@@ -37,7 +37,7 @@
             <div class="col">
                 <div class="card">
                     <div class="card-header">
-                        주요 언론사
+                        주요 언론사 ({{ news.major|length }}건)
                     </div>
                     <div class="card-body py-2">
                         {% for new in news.major %}
@@ -62,7 +62,7 @@
             <div class="col">
                 <div class="card">
                     <div class="card-header">
-                        기타 언론사
+                        기타 언론사 ({{ news.etc|length }}건)
                     </div>
                     <div class="card-body py-2">
                         {% for new in news.etc %}
