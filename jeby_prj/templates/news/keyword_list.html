@@ -1,0 +1,25 @@
+{% extends 'base_news.html' %}
+
+{% load static %}
+
+{% block custom_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'news/css/keyword_list.css' %}"/>
+{% endblock custom_css %}
+
+{% block content %}
+<div class="container">
+    {% for keyword in keyword_list %}
+    <div class="row">
+        <div class="col">
+            {{ keyword.title }}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}
+
+{% block script %}
+    {{ block.super }}
+
+{% endblock script %}

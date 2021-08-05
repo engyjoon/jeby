@@ -1,6 +1,9 @@
 import pprint as pp
+from django.views.generic import ListView
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .models import Keyword
 from . import naverapi
 
 
@@ -14,6 +17,7 @@ def index(request):
     )
 
 
+@login_required(login_url='common:login')
 def news_search(request):
     """키워드로 뉴스를 검색한다."""
 
@@ -40,3 +44,8 @@ def news_search(request):
             'error_msg': error_msg,
         }
     )
+
+
+class KeywordList(LoginRequiredMixin, ListView):
+    login_url = 'common:login'
+    model = Keyword
