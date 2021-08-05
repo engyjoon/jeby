@@ -10,7 +10,7 @@
 {% block content %}
 <div class="container d-flex align-items-center h-75" id="search-box">
     <div class="d-flex flex-column w-100">
-        <form action="{% url 'news:search' %}" method="post">
+        <form action="{% url 'news:search' %}" method="post" id="frm-search">
             {% csrf_token %}
             <div class="row mb-1">
                 <div class="col text-center">
@@ -19,7 +19,7 @@
             </div>
             <div class="row mb-3">
                 <div class="col">
-                    <div class="card shadow-sm">
+                    <div class="card border-secondary shadow-sm">
                         <div class="card-body" id="keyword-box">
                             <div class="d-flex flex-row">
                                 {% comment %} <div class="keyword">kt<img src="{% static 'images/multiply_capture.jpg' %}"></div> {% endcomment %}
@@ -27,7 +27,9 @@
                                 <div class="flex-grow-1">
                                     <input type="text" class="form-control" name="keyword" autocomplete=off>
                                 </div>
-                                <div class="me-2"><span id="search-img"><i class="fas fa-search"></i></span></div>
+                                <div class="me-2">
+                                    <a href="#"><span id="search-img"><i class="fas fa-search"></i></span></a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -37,3 +39,8 @@
     </div>
 </div>
 {% endblock content %}
+
+{% block script %}
+    {{ block.super }}
+    <script src="{% static 'news/js/news_index.js' %}"></script>
+{% endblock script %}
