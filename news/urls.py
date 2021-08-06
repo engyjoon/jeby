@@ -10,4 +10,6 @@ urlpatterns = [
          name='keyword_create'),
     path('keyword/update/<int:pk>/', views.KeywordUpdate.as_view(),
          name='keyword_update'),
+    path('keyword/delete/<int:pk>/', views.keyword_delete,
+         name='keyword_delete'),
 ]

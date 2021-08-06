@@ -1,7 +1,7 @@
 import pprint as pp
 
 from django.views.generic import ListView, DetailView, CreateView
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -86,3 +86,13 @@ class KeywordUpdate(LoginRequiredMixin, UpdateView):
             return super(KeywordUpdate, self).dispatch(request, *args, **kwargs)
         else:
             raise PermissionDenied
+
+
+@login_required(login_url='common:login')
+def keyword_delete(request, pk):
+    keyword = get_object_or_404(Keyword, pk=pk)
+    if request.user == keyword.author:
+        keyword.delete()
+        return redirect('news:keyword')
+    else:
+        raise PermissionDenied
