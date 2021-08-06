@@ -18,7 +18,7 @@
                         <div class="card-body" id="keyword-box">
                             <div class="d-flex flex-row">
                                 {% comment %} <div class="keyword">kt<img src="{% static 'images/multiply_capture.jpg' %}"></div> {% endcomment %}
-                                <button type="button" class="btn btn-secondary" id="btn-keyword-group">키워드그룹</button>
+                                <button type="button" class="btn btn-secondary" id="btn-keyword-group">키워드</button>
                                 <div class="flex-grow-1">
                                     <input type="text" class="form-control" name="keyword" value="{{ form.keyword }}" autocomplete=off>
                                 </div>
@@ -32,7 +32,6 @@
             </div>
         </form>
 
-        {% if news.major %}
         <div class="row mb-3">
             <div class="col">
                 <div class="card">
@@ -40,24 +39,26 @@
                         주요 언론사 ({{ news.major|length }}건)
                     </div>
                     <div class="card-body py-2">
-                        {% for new in news.major %}
-                            <div class="news-item fs-6">
-                                <a type="button" class="btn btn-sm btn-outline-secondary btn-site me-1">
-                                    {{ new.sitename }}
-                                </a>
-                                <a href="{{ new.originallink }}" target="_blank">
-                                    <span class="news-title">{{ new.title|safe|truncatechars:50 }}</span>
-                                    <span class="badge bg-light text-dark">{{ new.pubDate }}</span>
-                                </a>
-                            </div>
-                        {% endfor %}
+                        {% if news.major %}
+                            {% for new in news.major %}
+                                <div class="news-item fs-6">
+                                    <a type="button" class="btn btn-sm btn-outline-secondary btn-site me-1">
+                                        {{ new.sitename }}
+                                    </a>
+                                    <a href="{{ new.originallink }}" target="_blank">
+                                        <span class="news-title">{{ new.title|safe|truncatechars:50 }}</span>
+                                        <span class="badge bg-light text-dark">{{ new.pubDate }}</span>
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            검색된 뉴스가 없습니다.
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
-        {% endif %}
 
-        {% if news.etc %}
         <div class="row mb-5">
             <div class="col">
                 <div class="card">
@@ -65,25 +66,30 @@
                         기타 언론사 ({{ news.etc|length }}건)
                     </div>
                     <div class="card-body py-2">
-                        {% for new in news.etc %}
-                            <div class="news-item fs-6">
-                                <a type="button" class="btn btn-sm btn-outline-secondary btn-site me-1">
-                                    등록하기
-                                </a>
-                                <a href="{{ new.originallink }}" target="_blank">
-                                    <span>{{ new.title|safe|truncatechars:50 }}</span>
-                                    <span class="badge bg-light text-dark">{{ new.pubDate }}</span>
-                                </a>
-                            </div>
-                        {% endfor %}
+                        {% if news.etc %}
+                            {% for new in news.etc %}
+                                <div class="news-item fs-6">
+                                    <a type="button" class="btn btn-sm btn-outline-secondary btn-site me-1">
+                                        등록하기
+                                    </a>
+                                    <a href="{{ new.originallink }}" target="_blank">
+                                        <span>{{ new.title|safe|truncatechars:50 }}</span>
+                                        <span class="badge bg-light text-dark">{{ new.pubDate }}</span>
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            검색된 뉴스가 없습니다.
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
-        {% endif %}
 
     </div>
 </div>
+
+
 {% endblock content %}
 
 {% block footer %}
