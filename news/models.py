@@ -5,10 +5,10 @@ from django.db.models.fields import CharField
 
 
 class Keyword(models.Model):
-    title = models.CharField(max_length=50, unique=True)
-    content = models.CharField(max_length=100)
-    mailing = models.BooleanField(default=False)
-    shared = models.BooleanField(default=False)
+    title = models.CharField(max_length=50, unique=True, verbose_name='관리명')
+    content = models.CharField(max_length=100, verbose_name='키워드')
+    mailing = models.BooleanField(default=False, verbose_name='메일발송')
+    shared = models.BooleanField(default=False, verbose_name='공유')
     order = models.IntegerField(
         validators=[MinValueValidator(1)],
         unique=True)
