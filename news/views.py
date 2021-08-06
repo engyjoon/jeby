@@ -31,7 +31,9 @@ def news_search(request):
     template_name = 'news/read.html'
 
     news = None
-    if request.method == 'POST':
+    if request.method == 'GET':
+        template_name = 'news/index.html'
+    elif request.method == 'POST':
         keyword = request.POST.get('keyword').strip()
         if keyword is None or keyword == '':
             error_msg = "키워드를 입력해 주세요."
