@@ -42,7 +42,9 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <a href="{% url 'news:keyword_delete' keyword.id %}" type="button" class="btn btn-danger">Delete</a>
+        {% if keyword %}
+            <a href="{% url 'news:keyword_delete' keyword.id %}" type="button" class="btn btn-danger">Delete</a>
+        {% endif %}
       </div>
     </div>
   </div>
