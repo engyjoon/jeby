@@ -1,8 +1,11 @@
 import pprint as pp
+
 from django.views.generic import ListView, DetailView, CreateView
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+
 from .models import Keyword
 from . import naverapi
 
@@ -53,5 +56,18 @@ class KeywordList(LoginRequiredMixin, ListView):
 
 class KeywordCreate(LoginRequiredMixin, CreateView):
     login_url = 'common:login'
+    success_url = reverse_lazy('news:keyword')
     model = Keyword
     fields = ['title', 'content', 'mailing', 'shared']
+
+    def form_valid(self, form):
+        form.instance.order = Keyword.objects.last().pk + 1
+
+        current_user = self.request.user
+        if current_user.is_authenticated:
+            form.instance.author = current_user
+            response = super(KeywordCreate, self).form_valid(form)
+
+            return response
+        else:
+            return redirect('news:keyword')
