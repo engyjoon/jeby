@@ -26,7 +26,7 @@
                                 <button type="button" class="btn btn-secondary" id="btn-keyword-group"
                                     data-bs-toggle="modal" data-bs-target="#keywordListModal">키워드</button>
                                 <div class="flex-grow-1">
-                                    <input type="text" class="form-control" name="keyword" autocomplete=off>
+                                    <input type="text" class="form-control" name="keyword" id="input-keyword" autocomplete=off>
                                 </div>
                                 <div class="me-2">
                                     <a href="#"><span id="search-img"><i class="fas fa-search"></i></span></a>
@@ -41,21 +41,40 @@
 </div>
 
 <div class="modal fade" id="keywordListModal" tabindex="-1" aria-labelledby="keywordListModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">키워드 목록</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">키워드 목록</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">관리명</th>
+                            <th scope="col">키워드</th>
+                            <th scope="col">액션</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for keyword in keywords %}
+                        <tr>
+                            <td>{{ keyword.title }}</td>
+                            <td>{{ keyword.content }}</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-primary btn-select-keyword"
+                                    data-keyword="{{ keyword.content }}">select</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 {% endblock content %}
 

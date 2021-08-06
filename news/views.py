@@ -16,9 +16,14 @@ from . import naverapi
 def index(request):
     """뉴스 검색 첫 페이지"""
 
+    keywords = Keyword.objects.all()
+
     return render(
         request,
         'news/index.html',
+        {
+            'keywords': keywords,
+        }
     )
 
 

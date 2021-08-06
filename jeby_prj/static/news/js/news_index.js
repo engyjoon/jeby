@@ -4,4 +4,10 @@ $(document).ready(function () {
     $("#search-img").click(function () {
         $("#frm-search").submit();
     });
+
+    $(".btn-select-keyword").click(function () {
+        // console.log($(this).data("id"));
+        $("#input-keyword").val($(this).data("keyword"));
+        $("#keywordListModal").modal('hide');
+    });
 });
