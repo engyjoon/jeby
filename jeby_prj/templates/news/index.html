@@ -23,7 +23,8 @@
                         <div class="card-body" id="keyword-box">
                             <div class="d-flex flex-row">
                                 {% comment %} <div class="keyword">kt<img src="{% static 'images/multiply_capture.jpg' %}"></div> {% endcomment %}
-                                <button type="button" class="btn btn-secondary" id="btn-keyword-group">키워드그룹</button>
+                                <button type="button" class="btn btn-secondary" id="btn-keyword-group"
+                                    data-bs-toggle="modal" data-bs-target="#keywordListModal">키워드</button>
                                 <div class="flex-grow-1">
                                     <input type="text" class="form-control" name="keyword" autocomplete=off>
                                 </div>
@@ -37,6 +38,24 @@
             </div>
         </form>
     </div>
+</div>
+
+<div class="modal fade" id="keywordListModal" tabindex="-1" aria-labelledby="keywordListModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">키워드 목록</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock content %}
 
