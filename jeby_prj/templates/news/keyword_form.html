@@ -17,7 +17,10 @@
                 <table>
                     {{ form | crispy }}
                 </table>
-                <button type="sumit" class="btn btn-primary float-end">등록하기</button>
+                <div class="float-end">
+                    <a href="{% url 'news:keyword' %}" type="button" class="btn btn-outline-secondary">목록으로</a>
+                    <button type="sumit" class="btn btn-primary">저장하기</button>
+                </div>
             </form>
         </div>
     </div>

@@ -5,6 +5,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.edit import UpdateView
+from django.core.exceptions import PermissionDenied
 
 from .models import Keyword
 from . import naverapi
@@ -71,3 +73,16 @@ class KeywordCreate(LoginRequiredMixin, CreateView):
             return response
         else:
             return redirect('news:keyword')
+
+
+class KeywordUpdate(LoginRequiredMixin, UpdateView):
+    login_url = 'common:login'
+    success_url = reverse_lazy('news:keyword')
+    model = Keyword
+    fields = ['title', 'content', 'mailing', 'shared']
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user == self.get_object().author:
+            return super(KeywordUpdate, self).dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
