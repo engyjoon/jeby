@@ -2,7 +2,7 @@
  
     <nav class="navbar navbar-expand-md navbar-light fixed-top bg-light border-bottom border-1 mb-0">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'news:index' %}">
+            <a class="navbar-brand" href="{% url 'news:search' %}">
                 <img src="{% static 'images/swallow_152px.png' %}" alt="" height="31" 
                     class="d-inline-block align-text-top">
                 <span>Jeby</span>
@@ -10,7 +10,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{% url 'news:index' %}">뉴스검색</a>
+                        <a class="nav-link" aria-current="page" href="{% url 'news:search' %}">뉴스검색</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="{% url 'news:keyword' %}">키워드관리</a>
@@ -36,7 +36,7 @@
         </div>
         <div class="collapse navbar-toggler p-0 mt-2 w-100 border-bottom-0" id="navbarToggleExternalContent">
             <div class="py-2 px-3">
-                <div class="nav-item-mobile"><a href="{% url 'news:index' %}">뉴스검색</a></div>
+                <div class="nav-item-mobile"><a href="{% url 'news:search' %}">뉴스검색</a></div>
                 <div class="nav-item-mobile"><a href="{% url 'news:keyword' %}">키워드관리</a></div>
             </div>
         </div>

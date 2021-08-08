@@ -35,14 +35,16 @@ def news_search(request):
     error_msg = None
     template_name = 'news/read.html'
 
+    keywords = Keyword.objects.all()
+
     news = None
-    if request.method == 'GET':
-        template_name = 'news/index.html'
-    elif request.method == 'POST':
+    # if request.method == 'GET':
+    # template_name = 'news/index.html'
+    if request.method == 'POST':
         keyword = request.POST.get('keyword').strip()
         if keyword is None or keyword == '':
             error_msg = "키워드를 입력해 주세요."
-            template_name = 'news/index.html'
+            # template_name = 'news/index.html'
         else:
             news = naverapi.get_news(keyword)
             form['keyword'] = keyword
@@ -54,6 +56,7 @@ def news_search(request):
             'news': news,
             'form': form,
             'error_msg': error_msg,
+            'keywords': keywords,
         }
     )
 

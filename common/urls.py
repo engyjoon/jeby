@@ -5,7 +5,7 @@ from news import views
 app_name = 'common'
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.index, name='search'),
     path('login/', auth_views.LoginView.as_view(
         template_name='common/login.html'),  name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
