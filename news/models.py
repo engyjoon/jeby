@@ -5,7 +5,7 @@ from django.db.models.fields import CharField
 
 
 class Keyword(models.Model):
-    title = models.CharField(max_length=50, verbose_name='관리명')
+    title = models.CharField(max_length=50, verbose_name='관리명', unique=False)
     content = models.CharField(max_length=100, verbose_name='키워드')
     mailing = models.BooleanField(default=False, verbose_name='메일발송')
     shared = models.BooleanField(default=False, verbose_name='공유')
@@ -19,4 +19,7 @@ class Keyword(models.Model):
 
     class Meta:
         ordering = ['order']
-        unique_together = ('title', 'author',)
+        constraints = [
+            models.UniqueConstraint(
+                fields=['title', 'author'], name='unique title for author')
+        ]
