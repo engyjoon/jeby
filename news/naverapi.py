@@ -7,43 +7,57 @@ from django.conf import settings
 
 news_list = {
     'yna.kr': {
-        'id': 'yna',
-        'description': '연합뉴스',
+        'id': 'yna', 'description': '연합뉴스',
     },
     'news.mk.co.kr': {
-        'id': 'mk',
-        'description': '매일경제',
+        'id': 'mk', 'description': '매일경제',
     },
     'news.jtbc.joins.com': {
-        'id': 'jtbc',
-        'description': 'JTBC',
+        'id': 'jtbc', 'description': 'JTBC',
     },
     'www.hankyung.com': {
-        'id': 'hankyung',
-        'description': '한국경제',
+        'id': 'hankyung', 'description': '한국경제',
     },
     'news.joins.com': {
-        'id': 'joins',
-        'description': '중앙일보',
+        'id': 'joins', 'description': '중앙일보',
     },
 }
 
 
-def get_news(keyword):
+def get_news_group_site(keyword, display=50, start=1, sort='date'):
+    items = get_news(keyword, display, start, sort)
+
+    pattern = re.compile(r'^https?://([\w.-]*).*')
+
+    result = []
+    for item in items:
+        website = pattern.search(item.get('originallink'))
+
+        if website is not None:
+            uri = website.group(1)
+            item['pubDate'] = item['pubDate'].split()[4]
+
+        if uri in news_list.keys():
+            item['sitename'] = news_list.get(uri).get('description')
+        else:
+            item['sitename'] = 'unknown'
+
+        result.append(item)
+
+    return result
+
+
+def get_news(keyword, display=50, start=1, sort='date'):
     """네이버 뉴스 API 호출 및 결과 반환"""
 
     values = {
         'query': keyword,
-        # default : 10, max: 100
-        'display': 50,
-        # default: 1, max: 1000
-        'start': 1,
-        # date(default), sim
-        'sort': 'date',
+        'display': display,
+        'start': start,
+        'sort': sort,
     }
 
     params = urllib.parse.urlencode(values, quote_via=urllib.parse.quote)
-    print(params)
 
     url = "https://openapi.naver.com/v1/search/news.json?" + params
 
@@ -56,32 +70,9 @@ def get_news(keyword):
 
     if rescode == 200:
         response_body = response.read()
-        items = json.loads(response_body.decode('utf-8')).get('items')
-
-        pattern = re.compile(r'^https?://([\w.-]*).*')
-
-        news_by_website = {}
-        for item in items:
-            website = pattern.search(item.get('originallink'))
-
-            if website is not None:
-                link = website.group(1)
-
-                item['pubDate'] = item['pubDate'].split()[4]
-
-                if link in news_list.keys():
-                    # siteid = news_list.get(link).get('id')
-                    siteid = 'major'
-                    item['sitename'] = news_list.get(link).get('description')
-                else:
-                    siteid = 'etc'
-                    item['sitename'] = 'etc'
-
-                news_by_website.setdefault(siteid, [])
-                news_by_website.get(siteid).append(item)
-
-        result = news_by_website
+        result = json.loads(response_body.decode('utf-8')).get('items')
     else:
+        print(rescode)
         result = None
 
     return result
