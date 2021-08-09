@@ -34,8 +34,11 @@ def get_news(keyword):
 
     values = {
         'query': keyword,
+        # default : 10, max: 100
         'display': 50,
+        # default: 1, max: 1000
         'start': 1,
+        # date(default), sim
         'sort': 'date',
     }
 
