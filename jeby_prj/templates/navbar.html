@@ -15,6 +15,9 @@
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="{% url 'news:keyword' %}">키워드관리</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{% url 'news:email_setting' %}">이메일설정</a>
+                    </li>
                 </ul>
             </div>
             <form class="d-flex">
@@ -29,15 +32,18 @@
                         logout
                     {% endif %}
                 </a>
+                {% comment %} 
                 <a href="#" class="btn btn-outline-secondary nav-button" type="button">
                     <i class="bi bi-gear"></i>
                 </a>
+                {% endcomment %}
             </form>
         </div>
         <div class="collapse navbar-toggler p-0 mt-2 w-100 border-bottom-0" id="navbarToggleExternalContent">
             <div class="py-2 px-3">
                 <div class="nav-item-mobile"><a href="{% url 'news:search' %}">뉴스검색</a></div>
                 <div class="nav-item-mobile"><a href="{% url 'news:keyword' %}">키워드관리</a></div>
+                <div class="nav-item-mobile"><a href="{% url 'news:email_setting' %}">이메일설정</a></div>
             </div>
         </div>
     </nav>

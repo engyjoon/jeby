@@ -1,0 +1,126 @@
+{% extends 'base_news.html' %}
+
+{% load static %}
+
+{% block custom_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'news/css/email_setting.css' %}"/>
+{% endblock custom_css %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <span>발송시간<span>
+                    <span class="float-end">
+                        <a type="button" class="btn btn-sm btn-primary" id="btn-send-time"><i class="bi bi-check"></i> 적용</a>
+                    </span>
+                </div>
+                <div class="card-body" id="send-time">
+                    <div class="d-flex justify-content-between">
+                        <div class="hour">00:00</div>
+                        <div class="hour">00:30</div>
+                        <div class="hour">01:00</div>
+                        <div class="hour">01:30</div>
+                        <div class="hour">02:00</div>
+                        <div class="hour">02:30</div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div class="hour">03:00</div>
+                        <div class="hour">03:30</div>
+                        <div class="hour">04:00</div>
+                        <div class="hour">04:30</div>
+                        <div class="hour">05:00</div>
+                        <div class="hour">05:30</div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div class="hour">06:00</div>
+                        <div class="hour">06:30</div>
+                        <div class="hour">07:00</div>
+                        <div class="hour">07:30</div>
+                        <div class="hour">08:00</div>
+                        <div class="hour">08:30</div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div class="hour">09:00</div>
+                        <div class="hour">09:30</div>
+                        <div class="hour">10:00</div>
+                        <div class="hour">10:30</div>
+                        <div class="hour">11:00</div>
+                        <div class="hour">11:30</div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div class="hour">12:00</div>
+                        <div class="hour">12:30</div>
+                        <div class="hour">13:00</div>
+                        <div class="hour">13:30</div>
+                        <div class="hour">14:00</div>
+                        <div class="hour">14:30</div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div class="hour">15:00</div>
+                        <div class="hour">15:30</div>
+                        <div class="hour">16:00</div>
+                        <div class="hour">16:30</div>
+                        <div class="hour">17:00</div>
+                        <div class="hour">17:30</div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div class="hour">18:00</div>
+                        <div class="hour">18:30</div>
+                        <div class="hour">19:00</div>
+                        <div class="hour">19:30</div>
+                        <div class="hour">20:00</div>
+                        <div class="hour">20:30</div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div class="hour">21:00</div>
+                        <div class="hour">21:30</div>
+                        <div class="hour">22:00</div>
+                        <div class="hour">22:30</div>
+                        <div class="hour">23:00</div>
+                        <div class="hour">23:30</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <span>수신자<span>
+                    <span class="float-end">
+                        <a type="button" class="btn btn-sm btn-primary" id="btn-recipient"><i class="bi bi-check"></i> 적용</a>
+                    </span>
+                </div>
+                <div class="card-body" id="recipient">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr class="text-center">
+                                <th scope="col" style="width:90px;">이름</th>
+                                <th scope="col">이메일</th>
+                                <th scope="col" style="width:70px;">액션</th>
+                            </tr>
+                        </thead>
+                        <tbody id="email-list">
+                            <tr class="text-center">
+                                <td scope="row"><input type="text" class="text-center" style="width:95%;" id="input-name"></td>
+                                <td scope="row"><input type="email" class="text-left email-address" style="width:95%;" id="input-email"></td>
+                                <td scope="row">
+                                    <a type="button" class="btn btn-sm btn-secondary" style="width:95%;" id="add-email">추가</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+    {{ block.super }}
+    <script src="{% static 'news/js/email_setting.js' %}"></script>
+{% endblock script %}

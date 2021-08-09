@@ -1,0 +1,43 @@
+.hour {
+    border: 1px solid black;
+    margin: 5px 2px;
+    padding: 2px 23px;
+    /* font-size: 0.9rem; */
+}
+
+#send-time,
+#recipient {
+    height: 352px;
+}
+
+.email-address {
+    padding-left: 10px;
+}
+
+@media (max-width: 1400px) {
+.hour {
+    border: 1px solid black;
+    margin: 5px 2px;
+    padding: 2px 17px;
+    /* font-size: 0.9rem; */
+}
+
+#send-time,
+#recipient {
+    height: 322px;
+}
+}
+
+@media (max-width: 600px) {
+.hour {
+    border: 1px solid black;
+    margin: 4px 0px;
+    padding: 1px 5px;
+    /* font-size: 0.9rem; */
+}
+
+#send-time,
+#recipient {
+    height: 322px;
+}
+}

@@ -106,3 +106,12 @@ def keyword_delete(request, pk):
         return redirect('news:keyword')
     else:
         raise PermissionDenied
+
+
+@login_required(login_url='common:login')
+def email_setting(request):
+
+    return render(
+        request,
+        'news/email_setting.html',
+    )
