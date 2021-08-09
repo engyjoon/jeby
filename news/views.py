@@ -65,6 +65,12 @@ class KeywordList(LoginRequiredMixin, ListView):
     login_url = 'common:login'
     model = Keyword
 
+    def get_queryset(self):
+        current_user = self.request.user
+        keyword_list = Keyword.objects.filter(author=current_user)
+
+        return keyword_list
+
 
 class KeywordCreate(LoginRequiredMixin, CreateView):
     login_url = 'common:login'
