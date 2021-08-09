@@ -23,3 +23,11 @@ class Keyword(models.Model):
             models.UniqueConstraint(
                 fields=['title', 'author'], name='unique title for author')
         ]
+
+
+class Setting(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    email_send_time = CharField(
+        max_length=100, verbose_name='메일발송시간', null=True, blank=True)
+    email_recipient = CharField(
+        max_length=200, verbose_name='메일수신자', null=True, blank=True)
