@@ -45,7 +45,7 @@ def news_search(request):
             error_msg = "키워드를 입력해 주세요."
             # template_name = 'news/index.html'
         else:
-            news = naverapi.get_news(keyword)
+            news = naverapi.get_news_group_site(keyword)
             form['keyword'] = keyword
 
     return render(

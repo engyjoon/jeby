@@ -46,44 +46,21 @@
             <div class="col">
                 <div class="card">
                     <div class="card-header">
-                        주요 언론사 ({{ news.major|length }}건)
+                        검색결과 ({{ news|length }}건)
                     </div>
                     <div class="card-body py-2">
-                        {% if news.major %}
-                            {% for new in news.major %}
+                        {% if news %}
+                            {% for new in news %}
                                 <div class="news-item fs-6">
-                                    <a type="button" class="btn btn-sm btn-outline-secondary btn-site me-1">
-                                        {{ new.sitename }}
-                                    </a>
+                                    {% if new.sitename == 'unknown' %}
+                                        <a type="button" class="btn btn-sm btn-outline-secondary btn-site me-1">
+                                            등록하기</a>
+                                    {% else %}
+                                        <a type="button" class="btn btn-sm btn-secondary btn-site me-1" style="color:#ffffff;">
+                                        {{ new.sitename }}</a>
+                                    {% endif %}
                                     <a href="{{ new.originallink }}" target="_blank">
                                         <span class="news-title">{{ new.title|safe|truncatechars:50 }}</span>
-                                        <span class="badge bg-light text-dark">{{ new.pubDate }}</span>
-                                    </a>
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            검색된 뉴스가 없습니다.
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mb-5">
-            <div class="col">
-                <div class="card">
-                    <div class="card-header">
-                        기타 언론사 ({{ news.etc|length }}건)
-                    </div>
-                    <div class="card-body py-2">
-                        {% if news.etc %}
-                            {% for new in news.etc %}
-                                <div class="news-item fs-6">
-                                    <a type="button" class="btn btn-sm btn-outline-secondary btn-site me-1">
-                                        등록하기
-                                    </a>
-                                    <a href="{{ new.originallink }}" target="_blank">
-                                        <span>{{ new.title|safe|truncatechars:50 }}</span>
                                         <span class="badge bg-light text-dark">{{ new.pubDate }}</span>
                                     </a>
                                 </div>
