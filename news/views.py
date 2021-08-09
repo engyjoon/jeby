@@ -35,7 +35,9 @@ def news_search(request):
     error_msg = None
     template_name = 'news/read.html'
 
-    keywords = Keyword.objects.all()
+    # keywords = Keyword.objects.all()
+    current_user = request.user
+    keywords = Keyword.objects.filter(author=current_user)
 
     news = None
     # if request.method == 'GET':
