@@ -11,5 +11,5 @@ urlpatterns = [
     path('keyword/update/<int:pk>/',
          views.KeywordUpdate.as_view(), name='keyword_update'),
     path('keyword/delete/<int:pk>/', views.keyword_delete, name='keyword_delete'),
-    path('email', views.email_setting, name='email_setting'),
+    path('email/', views.email_setting, name='email_setting'),
 ]

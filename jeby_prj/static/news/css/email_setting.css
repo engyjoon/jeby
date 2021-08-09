@@ -1,5 +1,15 @@
+a {
+    text-decoration: none;
+    color: #6c757d;
+}
+
+.time-active {
+    background-color: #6c757d;
+    color: #ffffff;
+}
+
 .hour {
-    border: 1px solid black;
+    border: 1px solid #6c757d;
     margin: 5px 2px;
     padding: 2px 23px;
     /* font-size: 0.9rem; */
@@ -16,7 +26,7 @@
 
 @media (max-width: 1400px) {
 .hour {
-    border: 1px solid black;
+    border: 1px solid #6c757d;
     margin: 5px 2px;
     padding: 2px 17px;
     /* font-size: 0.9rem; */
@@ -30,7 +40,7 @@
 
 @media (max-width: 600px) {
 .hour {
-    border: 1px solid black;
+    border: 1px solid #6c757d;
     margin: 4px 0px;
     padding: 1px 5px;
     /* font-size: 0.9rem; */

@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import UpdateView
 from django.core.exceptions import PermissionDenied
 
-from .models import Keyword
+from .models import Keyword, Setting
 from . import naverapi
 
 
@@ -35,13 +35,10 @@ def news_search(request):
     error_msg = None
     template_name = 'news/read.html'
 
-    # keywords = Keyword.objects.all()
     current_user = request.user
     keywords = Keyword.objects.filter(author=current_user)
 
     news = None
-    # if request.method == 'GET':
-    # template_name = 'news/index.html'
     if request.method == 'POST':
         keyword = request.POST.get('keyword').strip()
         if keyword is None or keyword == '':
@@ -118,8 +115,16 @@ def keyword_delete(request, pk):
 
 @login_required(login_url='common:login')
 def email_setting(request):
+    setting = get_object_or_404(Setting, author=request.user.id)
+
+    email_send_times = setting.email_send_time
+    email_recipients = setting.email_recipient
 
     return render(
         request,
         'news/email_setting.html',
+        {
+            'email_send_times': email_send_times,
+            'email_recipients': email_recipients,
+        }
     )
