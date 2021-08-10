@@ -1,11 +1,15 @@
 import json
 import re
-from datetime import time, timedelta
+from datetime import time, timedelta, datetime, timezone
 import urllib.request
 import urllib.parse
+from dateutil.parser import parse
 from django.conf import settings
+from django.core.mail import send_mail
 from .models import Setting, Keyword
 
+
+KST = timezone(timedelta(hours=9))
 
 news_list = {
     'yna.kr': {
@@ -37,7 +41,7 @@ def get_news_group_site(keyword, display=50, start=1, sort='date'):
 
         if website is not None:
             uri = website.group(1)
-            item['pubDate'] = item['pubDate'].split()[4]
+            item['pubDate'] = parse(item['pubDate'])
 
         if uri in news_list.keys():
             item['sitename'] = news_list.get(uri).get('description')
@@ -49,7 +53,8 @@ def get_news_group_site(keyword, display=50, start=1, sort='date'):
     return result
 
 
-def get_news_by_schedule(current_time):
+def send_email_by_schedule(current_time):
+    now = datetime.now()
     rows = Setting.objects.all()
     for row in rows:
         times = row.email_send_time.split(';')
@@ -57,34 +62,73 @@ def get_news_by_schedule(current_time):
             index = times.index(current_time)
 
             if index == 0:
-                start_time = time(0, 0, 0)
+                start_time = now.replace(
+                    hour=0, minute=0, second=0, tzinfo=KST)
             else:
                 _time = times[index-1].split(':')
-                start_time = time(int(_time[0]), int(_time[1]), 0)
+                start_time = now.replace(
+                    hour=int(_time[0]), minute=int(_time[1]), second=0, tzinfo=KST)
 
             _time = current_time.split(':')
-            end_time = time(int(_time[0]), int(_time[1]), 0)
-
-            if end_time.minute == 0:
-                end_time = time(end_time.hour-1, 59, 59)
-            else:
-                end_time = time(
-                    end_time.hour, end_time.minute-1, end_time.second)
+            end_time = now.replace(
+                hour=int(_time[0]), minute=int(_time[1]), second=0, tzinfo=KST)
+            end_time = end_time + timedelta(seconds=-1)
 
         keywords = Keyword.objects.filter(author=row.author.id)
         keywords = keywords.filter(mailing=True)
 
+        news = []
         for keyword in keywords:
-            print(keyword.content)
+            news = get_news_all(keyword.content, start_time)
 
-        # recipients = row.email_recipient.split(';')
+        _recipients = row.email_recipient.split(';')
+        recipients = []
+        for recipient in _recipients:
+            recipients.append(recipient.split(',')[1])
+
+        _time = current_time.split(':')
+        _now = now.replace(hour=int(_time[0]), minute=int(
+            _time[1]), second=0, tzinfo=KST)
+        mail_title = f'[뉴스] {_now.year}/{_now.month}/{_now.day} {_now.hour}시 {_now.minute}분'
+
+        mail_content = '<table>'
+
+        for new in news:
+            mail_content += f'<tr><td>{new.get("title")}</td></tr>'
+
+        mail_content += '</table>'
+
+        send_mail(
+            mail_title,
+            mail_content,
+            'jebyhouse@gmail.com',
+            recipients,
+            fail_silently=False,
+        )
 
     return None
 
 
-def get_news_all(keyword):
+def get_news_all(keyword, start_time=None):
+    items = []
+    start = 1
+    display = 100
+    flag = True
+    while flag:
+        _list = get_news(keyword, display, start, 'date')
 
-    return None
+        for i in _list:
+            if start_time and start_time > parse(i['pubDate']):
+                flag = False
+                break
+
+            i['pubDate'] = parse(i['pubDate'])
+            items.append(i)
+
+        if len(_list) == display:
+            start += 100
+
+    return items
 
 
 def get_news(keyword, display, start, sort):

@@ -61,7 +61,7 @@
                                     {% endif %}
                                     <a href="{{ new.originallink }}" target="_blank">
                                         <span class="news-title">{{ new.title|safe|truncatechars:50 }}</span>
-                                        <span class="badge bg-light text-dark">{{ new.pubDate }}</span>
+                                        <span class="badge bg-light text-dark">{{ new.pubDate|date:"Y/m/d H:i:s" }}</span>
                                     </a>
                                 </div>
                             {% endfor %}
