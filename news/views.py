@@ -116,14 +116,15 @@ def keyword_delete(request, pk):
 @login_required(login_url='common:login')
 def email_setting(request):
     # setting = get_object_or_404(Setting, author=request.user.id)
-    setting = Setting.objects.get(author=request.user.id)
-    print(setting)
+    settings = Setting.objects.filter(author=request.user.id)
 
     email_send_times = None
     email_recipients = None
-    if setting:
-        email_send_times = setting.email_send_time
-        email_recipients = setting.email_recipient
+
+    if settings.exists():
+        for setting in settings:
+            email_send_times = setting.email_send_time
+            email_recipients = setting.email_recipient
 
     return render(
         request,

@@ -15,24 +15,28 @@ $(document).ready(function () {
 
     $(".nav-link").eq(2).addClass("active");
 
-    email_send_times = email_send_times.split(';');
-    for (i in email_send_times) {
-        $("#send-time .hour").each(function (index) {
-            if (email_send_times[i] === $(this).data('hour')) {
-                $(this).addClass("time-active");
-            }
-        });
+    if (email_send_times != 'None') {
+        email_send_times = email_send_times.split(';');
+        for (i in email_send_times) {
+            $("#send-time .hour").each(function (index) {
+                if (email_send_times[i] === $(this).data('hour')) {
+                    $(this).addClass("time-active");
+                }
+            });
+        }
     }
 
-    email_recipients = email_recipients.split(';');
-    for (i in email_recipients) {
-        email_recipient = email_recipients[i].split(',');
-        recipient_name = email_recipient[0];
-        recipient_email = email_recipient[1];
+    if (email_recipients != 'None') {
+        email_recipients = email_recipients.split(';');
+        for (i in email_recipients) {
+            email_recipient = email_recipients[i].split(',');
+            recipient_name = email_recipient[0];
+            recipient_email = email_recipient[1];
 
-        html_result = html_email.replace('#input_name#', recipient_name).replace('#input_email#', recipient_email);
+            html_result = html_email.replace('#input_name#', recipient_name).replace('#input_email#', recipient_email);
 
-        $("#email-list").append(html_result);
+            $("#email-list").append(html_result);
+        }
     }
 
     $("#add-email").click(function () {
