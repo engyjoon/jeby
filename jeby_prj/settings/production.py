@@ -8,6 +8,6 @@ STATICFILES_DIRS = []
 INSTALLED_APPS.append('django_crontab')
 
 CRONJOBS = [
-    ('20 * * * *', 'news.cron.send_mail', [], {},
-     ' >> '+BASE_DIR+'/log/send_mail.log 2>&1'),
+    ('*/30 * * * *', 'news.cron.send_mail',
+     [], {}, ' >> '+BASE_DIR+'/log/send_mail.log 2>&1'),
 ]
