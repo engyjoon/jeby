@@ -106,17 +106,16 @@ def send_email_by_schedule(current_time):
         # 메일 발송 시간과 메일 수신자가 존재할 경우에만 뉴스 검색 및 메일 발송을 수행한다.
         if times and recipients:
             # 네이버 검색 API를 사용하여 키워드를 차례로 검색한 후 news 리스트에 입력한다.
-            # start_time을 인자로 입력하여 현재시간(end_time)부터 start_time까지 조회하도록 한다.
+            # start_time과 end_time을 인자로 입력하여 end_time부터 start_time까지 조회하도록 한다.
             for keyword in keywords:
-                news = get_news_all(keyword.content, start_time)
+                news = get_news_all(keyword.content, start_time, end_time)
 
             # 메일 제목을 작성한다.
             # 함수 호출 시 입력한 시간을 사용한다.
             _time = current_time.split(':')
             _now = now.replace(hour=int(_time[0]), minute=int(
                 _time[1]), second=0, tzinfo=KST)
-            mail_title = f'[Jeby] {_now.year}/{str(_now.month).zfill(2)}/{str(_now.day).zfill(2)} \
-                {str(_now.hour).zfill(2)}시 {str(_now.minute).zfill(2)}분 뉴스'
+            mail_title = f'[Jeby] {_now.year}/{str(_now.month).zfill(2)}/{str(_now.day).zfill(2)} {str(_now.hour).zfill(2)}시 {str(_now.minute).zfill(2)}분 뉴스'
 
             # 메일 본문을 작성한다.
             _keywords = ', '.join([str(x) for x in keywords])
@@ -143,18 +142,23 @@ def send_email_by_schedule(current_time):
                 mail_content += f'''
                             <table style="width:800px;">
                                 <tr style="background-color: #F0F0F0;">
-                                    <th style="width:10%;">키워드</th>
-                                    <th style="width:80%;">기사제목</th>
-                                    <th style="width:10%;">발행시간</th>
+                                    <th style="width:20%;">키워드</th>
+                                    <th>기사제목</th>
+                                    <th style="width:110px; text-align:center;">발행시간</th>
                                 </tr>
                 '''
 
                 for new in news:
+                    # 뉴스 제목 일정 길이로 자른다.
+                    _title = new.get('title')
+                    # if len(_title) > 30:
+                    #     _title = _title[0:31] + '...'
+
                     mail_content += f'''
                         <tr>
                             <td>{new.get('keyword')}</td>
                             <td>
-                                <a href="{new.get('link')}">{new.get('title')}</a>
+                                <a href="{new.get('originallink')}">{_title}</a>
                             </td>
                             <td>{new.get('pubDate').strftime('%Y/%m/%d %H:%M')}</td>
                         </tr>
@@ -183,13 +187,13 @@ def send_email_by_schedule(current_time):
     return None
 
 
-def get_news_all(keyword, start_time=None):
+def get_news_all(keyword, start_time=None, end_time=None):
     """
     주어진 키워드 사용하여 네이버 검색 API를 끝까지 호출한다.
-    start_time이 지정될 경우 start_time까지 호출한다.
+    start_time과 end_time이 지정될 경우 start_time과 end_time 구간 내 뉴스를 반환한다.
     """
 
-    items = []
+    news = []
     start = 1
     display = 100
 
@@ -198,15 +202,20 @@ def get_news_all(keyword, start_time=None):
         _list = get_news(keyword, display, start, 'date')
         if _list:
             for i in _list:
+                # end_time이 존재하고 end_time보다 pubDate가 클 경우 news 리스트에 입력하지 않는다.
+                if end_time and end_time < parse(i['pubDate']):
+                    continue
+
                 # start_time이 존재하고 start_time보다 뉴스 발행시간이 작을 경우
-                # items 리스트에 뉴스 입력을 중지한다.
+                # news 리스트에 뉴스 입력을 중지한다.
                 if start_time and start_time > parse(i['pubDate']):
                     flag = False
                     break
 
                 i['keyword'] = keyword
                 i['pubDate'] = parse(i['pubDate'])
-                items.append(i)
+
+                news.append(i)
 
             # 검색한 뉴스 개수가 display 개수와 동일할 경우
             # start에 100을 더한 후 다시 뉴스를 검색한다.
@@ -215,7 +224,7 @@ def get_news_all(keyword, start_time=None):
         else:
             flag = False
 
-    return items
+    return news
 
 
 def get_news(keyword, display, start, sort):
