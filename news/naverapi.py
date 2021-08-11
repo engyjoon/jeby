@@ -109,9 +109,11 @@ def send_email_by_schedule(current_time=None):
         news = []
         # "메일 발송 시간", "메일 수신자", "키워드"가 존재할 경우에만 뉴스 검색 및 메일 발송을 수행한다.
         if times and recipients and keywords:
+            print('times, recipients, keywords 존재')
             # 네이버 검색 API를 사용하여 키워드를 차례로 검색한 후 news 리스트에 입력한다.
             # start_time과 end_time을 인자로 입력하여 end_time부터 start_time까지 조회하도록 한다.
             for keyword in keywords:
+                print('get_news_all 함수 호출')
                 news = get_news_all(keyword.content, start_time, end_time)
 
             # 메일 제목을 작성한다.
@@ -183,6 +185,7 @@ def send_email_by_schedule(current_time=None):
                 recipient_list=recipients,
                 fail_silently=False,
             )
+            print('메일 발송 완료!!')
 
             # 네이버 검색 API를 초당 10건으로 제한하고 있기 때문에
             # 1회 메일 발송 후 1초 휴식한다.
