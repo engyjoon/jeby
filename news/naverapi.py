@@ -31,36 +31,33 @@ news_list = {
 }
 
 
-def get_news_group_site(keyword, display=50, start=1, sort='date'):
-    items = get_news(keyword, display, start, sort)
+def get_news_by_hour(keyword, start_hour=24, end_hour=0):
+    """
+    주어진 매개변수 시간만큼 최근 뉴스 리스트를 반환한다.
+    """
 
-    pattern = re.compile(r'^https?://([\w.-]*).*')
+    now = datetime.now()
+    end_time = now.replace(tzinfo=KST) + timedelta(hours=-end_hour)
+    start_time = end_time + timedelta(hours=-start_hour)
 
-    result = []
-    for item in items:
-        website = pattern.search(item.get('originallink'))
-
-        if website is not None:
-            uri = website.group(1)
-            item['pubDate'] = parse(item['pubDate'])
-
-        if uri in news_list.keys():
-            item['sitename'] = news_list.get(uri).get('description')
-        else:
-            item['sitename'] = 'unknown'
-
-        result.append(item)
+    # 현재부터 24시간 이전까지 뉴스를 조회한다.
+    result = get_news(keyword, start_time, end_time)
 
     return result
 
 
 def send_email_by_schedule(current_time=None):
-    now = datetime.now()
+    """
+    OS Crond가 호출하는 함수이다.
+    current_time 매개변수가 없을 경우 datetime.now()를 현재 시간으로 사용한다.
+    current_time 매개변수의 "hh:mm" 형식의 문자열이다.
+    """
 
+    now = datetime.now()
     if current_time is None:
         current_time = str(now.hour).zfill(2) + ':' + str(now.minute).zfill(2)
 
-    # 사용자별 설정값 조회한다.
+    # 사용자별 설정값을 조회한다.
     rows = Setting.objects.all()
     for row in rows:
         # 사용자가 설정한 메일 발송 시간 텍스트를 전처리한다.
@@ -111,7 +108,7 @@ def send_email_by_schedule(current_time=None):
             # 네이버 검색 API를 사용하여 키워드를 차례로 검색한 후 news 리스트에 입력한다.
             # start_time과 end_time을 인자로 입력하여 end_time부터 start_time까지 조회하도록 한다.
             for keyword in keywords:
-                news = get_news_all(keyword.content, start_time, end_time)
+                news = get_news(keyword.content, start_time, end_time)
 
             # 메일 제목을 작성한다.
             # 함수 호출 시 입력한 시간을 사용한다.
@@ -190,7 +187,7 @@ def send_email_by_schedule(current_time=None):
     return None
 
 
-def get_news_all(keyword, start_time=None, end_time=None):
+def get_news(keyword, start_time=None, end_time=None):
     """
     주어진 키워드 사용하여 네이버 검색 API를 끝까지 호출한다.
     start_time과 end_time이 지정될 경우 start_time과 end_time 구간 내 뉴스를 반환한다.
@@ -202,7 +199,7 @@ def get_news_all(keyword, start_time=None, end_time=None):
 
     flag = True
     while flag:
-        _list = get_news(keyword, display, start, 'date')
+        _list = call_naverapi(keyword, display, start, 'date')
         if _list:
             for i in _list:
                 # end_time이 존재하고 end_time보다 pubDate가 클 경우 news 리스트에 입력하지 않는다.
@@ -215,8 +212,24 @@ def get_news_all(keyword, start_time=None, end_time=None):
                     flag = False
                     break
 
+                # 개별 뉴스에 키워드를 입력한다.
                 i['keyword'] = keyword
+
+                # 개별 뉴스의 발행시간을 datetime 형식으로 변환하여 다시 입력한다.
                 i['pubDate'] = parse(i['pubDate'])
+
+                # 개별 뉴스에 언론사 정보를 입력한다.
+                pattern = re.compile(r'^https?://([\w.-]*).*')
+                website = pattern.search(i.get('originallink'))
+                if website is not None:
+                    uri = website.group(1)
+                    if uri in news_list.keys():
+                        i['sitename'] = news_list.get(uri).get('description')
+                    else:
+                        i['sitename'] = 'unknown'
+                else:
+                    print('URI 추출 실패')
+                    print(f'originallink : {i.get("originallink")}')
 
                 news.append(i)
 
@@ -230,7 +243,7 @@ def get_news_all(keyword, start_time=None, end_time=None):
     return news
 
 
-def get_news(keyword, display, start, sort):
+def call_naverapi(keyword, display, start, sort):
     """네이버 뉴스 API 호출 및 결과 반환"""
 
     values = {

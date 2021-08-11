@@ -14,7 +14,9 @@ from . import naverapi
 
 @login_required(login_url='common:login')
 def index(request):
-    """뉴스 검색 첫 페이지"""
+    """
+    뉴스 검색 첫 페이지
+    """
 
     keywords = Keyword.objects.all()
 
@@ -29,23 +31,28 @@ def index(request):
 
 @login_required(login_url='common:login')
 def news_search(request):
-    """키워드로 뉴스를 검색한다."""
+    """
+    키워드로 뉴스를 검색한다.
+    """
 
     form = {}
     error_msg = None
     template_name = 'news/read.html'
 
+    # 사용자가 등록한 키워드를 조회하여 반환한다.
     current_user = request.user
     keywords = Keyword.objects.filter(author=current_user)
 
     news = None
     if request.method == 'POST':
         keyword = request.POST.get('keyword').strip()
+
+        # 키워드를 입력하지 않을 경우 관련 메지지를 반환한다.
         if keyword is None or keyword == '':
             error_msg = "키워드를 입력해 주세요."
-            # template_name = 'news/index.html'
+        # 키워드를 입력했을 경우 최근 24간 뉴스 리스트를 반환한다.
         else:
-            news = naverapi.get_news_group_site(keyword)
+            news = naverapi.get_news_by_hour(keyword, start_hour=24)
             form['keyword'] = keyword
 
     return render(
@@ -61,6 +68,9 @@ def news_search(request):
 
 
 class KeywordList(LoginRequiredMixin, ListView):
+    """
+    """
+
     login_url = 'common:login'
     model = Keyword
 
@@ -72,6 +82,9 @@ class KeywordList(LoginRequiredMixin, ListView):
 
 
 class KeywordCreate(LoginRequiredMixin, CreateView):
+    """
+    """
+
     login_url = 'common:login'
     success_url = reverse_lazy('news:keyword')
     model = Keyword
@@ -91,6 +104,9 @@ class KeywordCreate(LoginRequiredMixin, CreateView):
 
 
 class KeywordUpdate(LoginRequiredMixin, UpdateView):
+    """
+    """
+
     login_url = 'common:login'
     success_url = reverse_lazy('news:keyword')
     model = Keyword
@@ -105,6 +121,9 @@ class KeywordUpdate(LoginRequiredMixin, UpdateView):
 
 @login_required(login_url='common:login')
 def keyword_delete(request, pk):
+    """
+    """
+
     keyword = get_object_or_404(Keyword, pk=pk)
     if request.user == keyword.author:
         keyword.delete()
@@ -115,6 +134,9 @@ def keyword_delete(request, pk):
 
 @login_required(login_url='common:login')
 def email_setting(request):
+    """
+    """
+
     # setting = get_object_or_404(Setting, author=request.user.id)
     settings = Setting.objects.filter(author=request.user.id)
 
