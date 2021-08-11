@@ -54,8 +54,11 @@ def get_news_group_site(keyword, display=50, start=1, sort='date'):
     return result
 
 
-def send_email_by_schedule(current_time):
+def send_email_by_schedule(current_time=None):
     now = datetime.now()
+
+    if current_time is None:
+        current_time = str(now.hour).zfill(2) + ':' + str(now.minute).zfill(2)
 
     # 사용자별 설정값 조회한다.
     rows = Setting.objects.all()
