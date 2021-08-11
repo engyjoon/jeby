@@ -94,7 +94,7 @@ def send_email_by_schedule(current_time=None):
             end_time = end_time + timedelta(seconds=-1)
         # 함수 호출 시 입력한 시간이 메일 발송 시간에 존재하지 않으면 다음 사용자 처리
         else:
-            break
+            continue
 
         # 사용자가 설정한 메일 수신자들을 조회한다.
         # 사용자 이름은 제외하고 메일주소만 recipients 리스트에 입력한다.
