@@ -55,6 +55,7 @@ def get_news_group_site(keyword, display=50, start=1, sort='date'):
 
 
 def send_email_by_schedule(current_time=None):
+    print('send_email_by_schedule 함수 호출')
     now = datetime.now()
 
     if current_time is None:
