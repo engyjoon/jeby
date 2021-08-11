@@ -64,10 +64,12 @@ def send_email_by_schedule(current_time=None):
     # 사용자별 설정값 조회한다.
     rows = Setting.objects.all()
     for row in rows:
+        print(row.author)
         # 사용자가 설정한 메일 발송 시간 텍스트를 전처리한다.
         times = row.email_send_time.split(';')
         # 함수 호출 시 입력한 시간이 메일 발송 시간에 존재할 경우 처리한다.
         if current_time in times:
+            print('현재 시간 존재')
             # 함수 호출 시 입력한 시간이 사용자가 설정한 메일 발송 시간 중 몇 번째인지 확인한다.
             index = times.index(current_time)
             # 함수 호출 시 입력한 시간이 사용자가 설정한 메일 발송 시간이 첫번 째에 해당된다면
