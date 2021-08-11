@@ -55,7 +55,6 @@ def get_news_group_site(keyword, display=50, start=1, sort='date'):
 
 
 def send_email_by_schedule(current_time=None):
-    print('send_email_by_schedule 함수 호출')
     now = datetime.now()
 
     if current_time is None:
@@ -64,12 +63,10 @@ def send_email_by_schedule(current_time=None):
     # 사용자별 설정값 조회한다.
     rows = Setting.objects.all()
     for row in rows:
-        print(row.author)
         # 사용자가 설정한 메일 발송 시간 텍스트를 전처리한다.
         times = row.email_send_time.split(';')
         # 함수 호출 시 입력한 시간이 메일 발송 시간에 존재할 경우 처리한다.
         if current_time in times:
-            print('현재 시간 존재')
             # 함수 호출 시 입력한 시간이 사용자가 설정한 메일 발송 시간 중 몇 번째인지 확인한다.
             index = times.index(current_time)
             # 함수 호출 시 입력한 시간이 사용자가 설정한 메일 발송 시간이 첫번 째에 해당된다면
@@ -111,11 +108,9 @@ def send_email_by_schedule(current_time=None):
         news = []
         # "메일 발송 시간", "메일 수신자", "키워드"가 존재할 경우에만 뉴스 검색 및 메일 발송을 수행한다.
         if times and recipients and keywords:
-            print('times, recipients, keywords 존재')
             # 네이버 검색 API를 사용하여 키워드를 차례로 검색한 후 news 리스트에 입력한다.
             # start_time과 end_time을 인자로 입력하여 end_time부터 start_time까지 조회하도록 한다.
             for keyword in keywords:
-                print('get_news_all 함수 호출')
                 news = get_news_all(keyword.content, start_time, end_time)
 
             # 메일 제목을 작성한다.
@@ -187,7 +182,6 @@ def send_email_by_schedule(current_time=None):
                 recipient_list=recipients,
                 fail_silently=False,
             )
-            print('메일 발송 완료!!')
 
             # 네이버 검색 API를 초당 10건으로 제한하고 있기 때문에
             # 1회 메일 발송 후 1초 휴식한다.
