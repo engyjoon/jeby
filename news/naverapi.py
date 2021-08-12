@@ -115,7 +115,7 @@ def send_email_by_schedule(current_time=None):
             _time = current_time.split(':')
             _now = now.replace(hour=int(_time[0]), minute=int(
                 _time[1]), second=0, tzinfo=KST)
-            mail_title = f'[Jeby] {_now.year}/{str(_now.month).zfill(2)}/{str(_now.day).zfill(2)} {str(_now.hour).zfill(2)}시 {str(_now.minute).zfill(2)}분 뉴스'
+            mail_title = f'[공유] {_now.year}/{str(_now.month).zfill(2)}/{str(_now.day).zfill(2)} {str(_now.hour).zfill(2)}시 {str(_now.minute).zfill(2)}분 뉴스'
 
             # 메일 본문을 작성한다.
             _keywords = ', '.join([str(x) for x in keywords])
@@ -146,7 +146,7 @@ def send_email_by_schedule(current_time=None):
                             <span>크롬 브라우저에서 아래 URL을 직접 입력하여 접속하는 것을 권장합니다.</span><br>
                             <span>http://115.85.182.12</span>
                         </div>
-                        <hr>
+                        <br><br>
             '''
 
             if news:
