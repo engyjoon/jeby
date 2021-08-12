@@ -1,6 +1,6 @@
 import json
 import re
-import time
+from time import sleep
 from datetime import time, timedelta, datetime, timezone
 import urllib.request
 import urllib.parse
@@ -192,10 +192,6 @@ def send_email_by_schedule(current_time=None):
                 fail_silently=False,
             )
 
-            # 네이버 검색 API를 초당 10건으로 제한하고 있기 때문에
-            # 1회 메일 발송 후 1초 휴식한다.
-            # time.sleep(1)
-
     return None
 
 
@@ -251,14 +247,23 @@ def get_news(keyword, start_time=None, end_time=None):
                 start += 100
                 if start > 1000:
                     break
+            else:
+                break
         else:
             flag = False
+
+        # 네이버 검색 API를 초당 10건으로 제한하고 있기 때문에
+        # HTTP 상태코드 429 (초당 호출 한도 초과 오류)
+        # 1회 메일 발송 후 일정 시간 동안 휴식한다.
+        # sleep(0.5)
 
     return news
 
 
 def call_naverapi(keyword, display, start, sort):
-    """네이버 뉴스 API 호출 및 결과 반환"""
+    """
+    네이버 뉴스 API 호출 및 결과 반환
+    """
 
     values = {
         'query': keyword,
