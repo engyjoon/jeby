@@ -140,14 +140,13 @@ def send_email_by_schedule(current_time=None):
                     </head>
                     <body>
                         <h3>
-                            Jeby 뉴스 서비스 (<a href="http://115.85.182.12" target="_blank">바로가기</a>)
+                            네트운용본부 뉴스 (<a href="http://115.85.182.12" target="_blank">바로가기</a>)
                         </h3>
                         <div style="padding-bottom:5px;">
                             <span>크롬 브라우저에서 아래 URL을 직접 입력하여 접속하는 것을 권장합니다.</span><br>
                             <span>http://115.85.182.12</span>
                         </div>
                         <hr>
-                        <p>키워드 : {_keywords}</p>
             '''
 
             if news:
