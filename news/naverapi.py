@@ -249,6 +249,8 @@ def get_news(keyword, start_time=None, end_time=None):
             # start에 100을 더한 후 다시 뉴스를 검색한다.
             if len(_list) == display:
                 start += 100
+                if start > 1000:
+                    break
         else:
             flag = False
 
