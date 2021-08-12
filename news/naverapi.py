@@ -123,6 +123,11 @@ def send_email_by_schedule(current_time=None):
                 <html>
                     <head>
                         <style>
+                            body {{
+                                font-family: 'Malgun Gothic';
+                                font-size: 11pt;
+                            }}
+
                             table, th, td {{
                                 border: 1px solid #6c757d;
                                 border-collapse: collapse;
@@ -134,18 +139,25 @@ def send_email_by_schedule(current_time=None):
                         </style>
                     </head>
                     <body>
-                        <h3>Jeby 뉴스 서비스</h3>
+                        <h3>
+                            Jeby 뉴스 서비스 (<a href="http://115.85.182.12" target="_blank">바로가기</a>)
+                        </h3>
+                        <div style="padding-bottom:5px;">
+                            <span>크롬 브라우저에서 아래 URL을 직접 입력하여 접속하는 것을 권장합니다.</span><br>
+                            <span>http://115.85.182.12</span>
+                        </div>
+                        <hr>
                         <p>키워드 : {_keywords}</p>
             '''
 
             if news:
                 mail_content += f'''
-                            <table style="width:800px;">
-                                <tr style="background-color: #F0F0F0;">
-                                    <th style="width:20%;">키워드</th>
-                                    <th>기사제목</th>
-                                    <th style="width:110px; text-align:center;">발행시간</th>
-                                </tr>
+                    <table style="width:800px;">
+                        <tr style="background-color: #F0F0F0;">
+                            <th style="width:20%;">키워드</th>
+                            <th>기사제목</th>
+                            <th style="width:110px; text-align:center;">발행시간</th>
+                        </tr>
                 '''
 
                 for new in news:
