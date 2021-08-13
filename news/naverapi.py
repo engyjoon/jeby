@@ -105,11 +105,6 @@ def send_email_by_schedule(current_time=None):
         news = []
         # "메일 발송 시간", "메일 수신자", "키워드"가 존재할 경우에만 뉴스 검색 및 메일 발송을 수행한다.
         if times and recipients and keywords:
-            # 네이버 검색 API를 사용하여 키워드를 차례로 검색한 후 news 리스트에 입력한다.
-            # start_time과 end_time을 인자로 입력하여 end_time부터 start_time까지 조회하도록 한다.
-            for keyword in keywords:
-                news = get_news(keyword.content, start_time, end_time)
-
             # 메일 제목을 작성한다.
             # 함수 호출 시 입력한 시간을 사용한다.
             _time = current_time.split(':')
@@ -118,7 +113,6 @@ def send_email_by_schedule(current_time=None):
             mail_title = f'[공유] {_now.year}/{str(_now.month).zfill(2)}/{str(_now.day).zfill(2)} {str(_now.hour).zfill(2)}시 {str(_now.minute).zfill(2)}분 뉴스'
 
             # 메일 본문을 작성한다.
-            _keywords = ', '.join([str(x) for x in keywords])
             mail_content = f'''
                 <html>
                     <head>
@@ -139,47 +133,56 @@ def send_email_by_schedule(current_time=None):
                         </style>
                     </head>
                     <body>
-                        <h3>
-                            네트운용본부 뉴스 (<a href="http://115.85.182.12" target="_blank">바로가기</a>)
-                        </h3>
-                        <div style="padding-bottom:5px;">
-                            <span>크롬 브라우저에서 아래 URL을 직접 입력하여 접속하는 것을 권장합니다.</span><br>
-                            <span>http://115.85.182.12</span>
+                        <div style="font-weight:bold; font-size:18pt; padding-bottom:0px; margin-bottom:5px;">
+                            {settings.EMAIL_TITLE}
                         </div>
-                        <br><br>
+                        <div style="padding-bottom:30px;">
+                            <a href="{settings.SERVICE_URL}" target="_blank">{settings.SERVICE_URL}</a> (크롬 브라우저 사용 권장)
+                        </div>
             '''
 
-            if news:
-                mail_content += f'''
-                    <table style="width:800px;">
-                        <tr style="background-color: #F0F0F0;">
-                            <th style="width:20%;">키워드</th>
-                            <th>기사제목</th>
-                            <th style="width:110px; text-align:center;">발행시간</th>
-                        </tr>
-                '''
+            # 네이버 검색 API를 사용하여 키워드를 차례로 검색한 후 news 리스트에 입력한다.
+            # start_time과 end_time을 인자로 입력하여 end_time부터 start_time까지 조회하도록 한다.
+            for keyword in keywords:
+                news = get_news(keyword.content, start_time, end_time)
 
-                for new in news:
-                    # 뉴스 제목 일정 길이로 자른다.
-                    _title = new.get('title')
-                    # if len(_title) > 30:
-                    #     _title = _title[0:31] + '...'
-
+                if news:
                     mail_content += f'''
-                        <tr>
-                            <td>{new.get('keyword')}</td>
-                            <td>
-                                <a href="{new.get('originallink')}">{_title}</a>
-                            </td>
-                            <td>{new.get('pubDate').strftime('%Y/%m/%d %H:%M')}</td>
-                        </tr>
+                        <div style="margin-bottom:15px;">
+                            <div><strong>[{keyword.title}]</strong></div>
+                            <div style="margin-left:15px;">
+                                검색어 &gt;&gt; {keyword.content}
+                            </div>
+                            <div style="margin-left:15px;">
+                                <table style="width:800px;">
+                                    <tr style="background-color: #F0F0F0;">
+                                        <th style="width:87%; text-align:center;">기사제목</th>
+                                        <th style="width:13%; text-align:center;">발행시간</th>
+                                    </tr>
                     '''
 
-                mail_content += '</table></body></html>'
-            else:
-                mail_content += f'''
-                    <p>검색된 뉴스가 없습니다.</p>
+                    for new in news:
+                        mail_content += f'''
+                            <tr>
+                                <td><a href="{new.get('originallink')}">{new.get('title')}</a></td>
+                                <td style="text-align:center;">{new.get('pubDate').strftime('%m/%d %H:%M')}</td>
+                            </tr>
+                        '''
+
+                    mail_content += '''
+                                </table>
+                            </div>
+                        </div>
+                    '''
+                else:
+                    mail_content += f'''
+                        <p>검색된 뉴스가 없습니다.</p>
                 '''
+
+            mail_content += f'''
+                    </body>
+                </html>
+            '''
 
             # 메일을 발송한다.
             send_mail(

@@ -20,7 +20,7 @@ from django.core.exceptions import ImproperlyConfigured
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # 비밀 정보가 기록된 파일을 로딩한다.
-with open(os.path.join(BASE_DIR, 'settings', 'secrets.json')) as f:
+with open(os.path.join(BASE_DIR, 'settings', 'secrets.json'), encoding='UTF-8') as f:
     secrets = json.loads(f.read())
 
 
@@ -169,4 +169,7 @@ EMAIL_HOST_USER = get_secret("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = get_secret("EMAIL_HOST_PASSWORD")
 EMAIL_PORT = get_secret("EMAIL_PORT")
 EMAIL_USE_TLS = True
+EMAIL_TITLE = get_secret("EMAIL_TITLE")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+SERVICE_URL = get_secret("SERVICE_URL")
