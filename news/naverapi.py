@@ -136,9 +136,10 @@ def send_email_by_schedule(current_time=None):
                         <div style="font-weight:bold; font-size:18pt; padding-bottom:0px; margin-bottom:5px;">
                             {settings.EMAIL_TITLE}
                         </div>
-                        <div style="padding-bottom:30px;">
+                        <div>
                             <a href="{settings.SERVICE_URL}" target="_blank">{settings.SERVICE_URL}</a> (크롬 브라우저 사용 권장)
                         </div>
+                        <br><br>
             '''
 
             # 네이버 검색 API를 사용하여 키워드를 차례로 검색한 후 news 리스트에 입력한다.
@@ -148,16 +149,16 @@ def send_email_by_schedule(current_time=None):
 
                 if news:
                     mail_content += f'''
-                        <div style="margin-bottom:15px;">
+                        <div>
                             <div><strong>[{keyword.title}]</strong></div>
-                            <div style="margin-left:15px;">
+                            <div">
                                 검색어 &gt;&gt; {keyword.content}
                             </div>
-                            <div style="margin-left:15px;">
-                                <table style="width:800px;">
+                            <div">
+                                <table style="width:750px;">
                                     <tr style="background-color: #F0F0F0;">
-                                        <th style="width:87%; text-align:center;">기사제목</th>
-                                        <th style="width:13%; text-align:center;">발행시간</th>
+                                        <th style="width:85%; text-align:center;">기사제목</th>
+                                        <th style="width:15%; text-align:center;">발행시간</th>
                                     </tr>
                     '''
 
@@ -173,6 +174,7 @@ def send_email_by_schedule(current_time=None):
                                 </table>
                             </div>
                         </div>
+                        <br><br>
                     '''
                 else:
                     mail_content += f'''
