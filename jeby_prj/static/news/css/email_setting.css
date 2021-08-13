@@ -15,9 +15,12 @@ a {
     /* font-size: 0.9rem; */
 }
 
-#send-time,
+#send-time {
+    height: 500px;
+}
+
 #recipient {
-    height: 352px;
+    height: 500px;
 }
 
 .email-address {
@@ -32,9 +35,12 @@ a {
     /* font-size: 0.9rem; */
 }
 
-#send-time,
-#recipient {
+#send-time {
     height: 322px;
+}
+
+#recipient {
+    height: 500px;
 }
 }
 
@@ -46,8 +52,11 @@ a {
     /* font-size: 0.9rem; */
 }
 
-#send-time,
-#recipient {
+#send-time {
     height: 322px;
+}
+
+#recipient {
+    height: 500px;
 }
 }
