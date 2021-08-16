@@ -147,19 +147,22 @@ def send_email_by_schedule(current_time=None):
             for keyword in keywords:
                 news = get_news(keyword.content, start_time, end_time)
 
+                mail_content += f'''
+                    <div>
+                        <div><strong>[{keyword.title}]</strong></div>
+                        <div>
+                            검색어 &gt;&gt; {keyword.content}
+                        </div>
+                '''
+
                 if news:
                     mail_content += f'''
                         <div>
-                            <div><strong>[{keyword.title}]</strong></div>
-                            <div">
-                                검색어 &gt;&gt; {keyword.content}
-                            </div>
-                            <div">
-                                <table style="width:750px;">
-                                    <tr style="background-color: #F0F0F0;">
-                                        <th style="width:85%; text-align:center;">기사제목</th>
-                                        <th style="width:15%; text-align:center;">발행시간</th>
-                                    </tr>
+                            <table style="width:750px;">
+                                <tr style="background-color: #F0F0F0;">
+                                    <th style="width:85%; text-align:center;">기사제목</th>
+                                    <th style="width:15%; text-align:center;">발행시간</th>
+                                </tr>
                     '''
 
                     for new in news:
@@ -179,6 +182,7 @@ def send_email_by_schedule(current_time=None):
                 else:
                     mail_content += f'''
                         <p>검색된 뉴스가 없습니다.</p>
+                        <br>
                 '''
 
             mail_content += f'''
