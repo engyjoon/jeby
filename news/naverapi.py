@@ -60,70 +60,77 @@ def send_email_by_schedule(current_time=None):
     # 사용자별 설정값을 조회한다.
     rows = Setting.objects.all()
     for row in rows:
-        # 업무 시간 텍스트를 전처리한다. (시작 시간, 종료 시간)
-        work_hour = row.work_hour
-        if work_hour is not None:
-            _work_hour = row.work_hour.split(';')
-            _work_hour_start = _work_hour[0].split(':')
-            _work_hour_end = _work_hour[1].split(':')
-            work_hour_start = now.replace(
-                hour=int(_work_hour_start[0]), minute=int(_work_hour_start[1]), second=0, tzinfo=KST)
-            work_hour_end = now.replace(
-                hour=int(_work_hour_end[0]), minute=int(_work_hour_end[1]), second=0, tzinfo=KST)
+        print(row.author)
 
-        # 사용자가 설정한 메일 발송 시간 텍스트를 전처리한다.
-        times = row.email_send_time.split(';')
-        # 함수 호출 시 입력한 시간이 메일 발송 시간에 존재할 경우 처리한다.
-        if current_time in times:
-            # 함수 호출 시 입력한 시간이 사용자가 설정한 메일 발송 시간 중 몇 번째인지 확인한다.
-            index = times.index(current_time)
-            # 함수 호출 시 입력한 시간이 사용자가 설정한 메일 발송 시간 중 첫 번째에 해당되고
-            if index == 0:
-                # work_hour가 설정이되 있지 않다면
-                # start_time을 하루 전날 마지막 시간으로 설정한다.
-                if work_hour is None:
-                    last_time = times[-1].split(':')
-                    start_time = now.replace(
-                        hour=int(last_time[0]), minute=int(last_time[1]), second=0, tzinfo=KST)
-                    start_time = start_time + timedelta(days=-1)
-                # work_hour가 설정되어 있다면
-                # start_time을 work_hour 종료 시간 1일 전으로 설정한다.
-                else:
-                    start_time = work_hour_end + timedelta(days=-1)
-            # 함수 호출 시 입력한 시간이 사용자가 설정한 메일 발송 시간이 첫 번째에 해당되지 않는다면
-            # start_time을 이전 메일 발송 시간으로 설정한다.
-            else:
-                _time = times[index-1].split(':')
-                start_time = now.replace(
-                    hour=int(_time[0]), minute=int(_time[1]), second=0, tzinfo=KST)
+        email_send_time = row.email_send_time
+        email_recipient = row.email_recipient
 
-            # 함수 호출 시 입력한 시간을 end_time으로 설정한다.
-            _time = current_time.split(':')
-            end_time = now.replace(
-                hour=int(_time[0]), minute=int(_time[1]), second=0, tzinfo=KST)
-            end_time = end_time + timedelta(seconds=-1)
-
-            print('start_time:', start_time)
-            print('end_time:', end_time)
-        # 함수 호출 시 입력한 시간이 메일 발송 시간에 존재하지 않으면 다음 사용자 처리
-        else:
-            continue
-
-        # 사용자가 설정한 메일 수신자들을 조회한다.
-        # 사용자 이름은 제외하고 메일주소만 recipients 리스트에 입력한다.
-        _recipients = row.email_recipient.split(';')
-        recipients = []
-        for recipient in _recipients:
-            recipients.append(recipient.split(',')[1])
-
-        # 사용자가 설정한 키워드들을 조회한다.
-        # 메일 발송 여부가 True인 것만 조회한다.
+        # 사용자가 설정한 키워드들을 조회한다. 메일 발송 여부가 True인 것만 조회한다.
         keywords = Keyword.objects.filter(author=row.author.id)
         keywords = keywords.filter(mailing=True)
 
-        news = []
-        # "메일 발송 시간", "메일 수신자", "키워드"가 존재할 경우에만 뉴스 검색 및 메일 발송을 수행한다.
-        if times and recipients and keywords:
+        print(email_send_time)
+        print(email_recipient)
+        print(keywords)
+
+        if email_send_time and email_recipient and keywords:
+            # 업무 시간 텍스트를 전처리한다. (시작 시간, 종료 시간)
+            work_hour = row.work_hour
+            if work_hour is not None:
+                _work_hour = row.work_hour.split(';')
+                _work_hour_start = _work_hour[0].split(':')
+                _work_hour_end = _work_hour[1].split(':')
+                work_hour_start = now.replace(
+                    hour=int(_work_hour_start[0]), minute=int(_work_hour_start[1]), second=0, tzinfo=KST)
+                work_hour_end = now.replace(
+                    hour=int(_work_hour_end[0]), minute=int(_work_hour_end[1]), second=0, tzinfo=KST)
+
+            # 사용자가 설정한 메일 발송 시간 텍스트를 전처리한다.
+            times = row.email_send_time.split(';')
+            # 함수 호출 시 입력한 시간이 메일 발송 시간에 존재할 경우 처리한다.
+            if current_time in times:
+                # 함수 호출 시 입력한 시간이 사용자가 설정한 메일 발송 시간 중 몇 번째인지 확인한다.
+                index = times.index(current_time)
+                # 함수 호출 시 입력한 시간이 사용자가 설정한 메일 발송 시간 중 첫 번째에 해당되고
+                if index == 0:
+                    # work_hour가 설정이되 있지 않다면
+                    # start_time을 하루 전날 마지막 시간으로 설정한다.
+                    if work_hour is None:
+                        last_time = times[-1].split(':')
+                        start_time = now.replace(
+                            hour=int(last_time[0]), minute=int(last_time[1]), second=0, tzinfo=KST)
+                        start_time = start_time + timedelta(days=-1)
+                    # work_hour가 설정되어 있다면
+                    # start_time을 work_hour 종료 시간 1일 전으로 설정한다.
+                    else:
+                        start_time = work_hour_end + timedelta(days=-1)
+
+                # 함수 호출 시 입력한 시간이 사용자가 설정한 메일 발송 시간이 첫 번째에 해당되지 않는다면
+                # start_time을 이전 메일 발송 시간으로 설정한다.
+                else:
+                    _time = times[index-1].split(':')
+                    start_time = now.replace(
+                        hour=int(_time[0]), minute=int(_time[1]), second=0, tzinfo=KST)
+
+                # 함수 호출 시 입력한 시간을 end_time으로 설정한다.
+                _time = current_time.split(':')
+                end_time = now.replace(
+                    hour=int(_time[0]), minute=int(_time[1]), second=0, tzinfo=KST)
+                end_time = end_time + timedelta(seconds=-1)
+
+                print('start_time:', start_time)
+                print('end_time:', end_time)
+            # 함수 호출 시 입력한 시간이 메일 발송 시간에 존재하지 않으면 다음 사용자 처리
+            else:
+                continue
+
+            # 사용자가 설정한 메일 수신자들을 조회한다.
+            # 사용자 이름은 제외하고 메일주소만 recipients 리스트에 입력한다.
+            _recipients = row.email_recipient.split(';')
+            recipients = []
+            for recipient in _recipients:
+                recipients.append(recipient.split(',')[1])
+
             # 메일 제목을 작성한다.
             # 함수 호출 시 입력한 시간을 사용한다.
             _time = current_time.split(':')
@@ -163,6 +170,7 @@ def send_email_by_schedule(current_time=None):
 
             # 네이버 검색 API를 사용하여 키워드를 차례로 검색한 후 news 리스트에 입력한다.
             # start_time과 end_time을 인자로 입력하여 end_time부터 start_time까지 조회하도록 한다.
+            news = []
             for keyword in keywords:
                 news = get_news(keyword.content, start_time, end_time)
 
