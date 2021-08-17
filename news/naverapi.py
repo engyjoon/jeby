@@ -60,21 +60,36 @@ def send_email_by_schedule(current_time=None):
     # 사용자별 설정값을 조회한다.
     rows = Setting.objects.all()
     for row in rows:
+        # 업무 시간 텍스트를 전처리한다. (시작 시간, 종료 시간)
+        if work_hour is not None:
+            work_hour = row.work_hour.split(';')
+            _work_hour_start = work_hour[0].split(':')
+            _work_hour_end = work_hour[1].split(':')
+            work_hour_start = now.replace(
+                hour=int(_work_hour_start[0]), minute=int(_work_hour_start[1]), second=0, tzinfo=KST)
+            work_hour_end = now.replace(
+                hour=int(_work_hour_end[0]), minute=int(_work_hour_end[1]), second=0, tzinfo=KST)
+
         # 사용자가 설정한 메일 발송 시간 텍스트를 전처리한다.
         times = row.email_send_time.split(';')
         # 함수 호출 시 입력한 시간이 메일 발송 시간에 존재할 경우 처리한다.
         if current_time in times:
             # 함수 호출 시 입력한 시간이 사용자가 설정한 메일 발송 시간 중 몇 번째인지 확인한다.
             index = times.index(current_time)
-            # 함수 호출 시 입력한 시간이 사용자가 설정한 메일 발송 시간이 첫번 째에 해당된다면
-            # 하루 전 날부터 현재 시간까지 뉴스를 검색하기 위해
-            # start_time을 하루 전날 마지막 시간으로 설정한다.
-            if index == 0:
-                last_time = times[-1].split(':')
-                start_time = now.replace(
-                    hour=int(last_time[0]), minute=int(last_time[1]), second=0, tzinfo=KST)
-                start_time = start_time + timedelta(days=-1)
-            # 함수 호출 시 입력한 시간이 사용자가 설정한 메일 발송 시간이 첫번 째에 해당되지 않는다면
+            # 함수 호출 시 입력한 시간이 사용자가 설정한 메일 발송 시간 중 첫 번째에 해당되고
+            if index == 0 and work_hour is None:
+                # work_hour가 설정이되 있지 않다면
+                # start_time을 하루 전날 마지막 시간으로 설정한다.
+                if work_hour is None:
+                    last_time = times[-1].split(':')
+                    start_time = now.replace(
+                        hour=int(last_time[0]), minute=int(last_time[1]), second=0, tzinfo=KST)
+                    start_time = start_time + timedelta(days=-1)
+                # work_hour가 설정되어 있다면
+                # start_time을 work_hour 종료 시간 1일 전으로 설정한다.
+                else:
+                    start_time = work_hour_end + timedelta(dayes=-1)
+            # 함수 호출 시 입력한 시간이 사용자가 설정한 메일 발송 시간이 첫 번째에 해당되지 않는다면
             # start_time을 이전 메일 발송 시간으로 설정한다.
             else:
                 _time = times[index-1].split(':')
