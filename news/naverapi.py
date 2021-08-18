@@ -60,18 +60,12 @@ def send_email_by_schedule(current_time=None):
     # 사용자별 설정값을 조회한다.
     rows = Setting.objects.all()
     for row in rows:
-        print(row.author)
-
         email_send_time = row.email_send_time
         email_recipient = row.email_recipient
 
         # 사용자가 설정한 키워드들을 조회한다. 메일 발송 여부가 True인 것만 조회한다.
         keywords = Keyword.objects.filter(author=row.author.id)
         keywords = keywords.filter(mailing=True)
-
-        print(email_send_time)
-        print(email_recipient)
-        print(keywords)
 
         if email_send_time and email_recipient and keywords:
             # 업무 시간 텍스트를 전처리한다. (시작 시간, 종료 시간)
