@@ -91,7 +91,11 @@ class KeywordCreate(LoginRequiredMixin, CreateView):
     fields = ['title', 'content', 'mailing', 'shared']
 
     def form_valid(self, form):
-        form.instance.order = Keyword.objects.last().pk + 1
+        keyword_last = Keyword.objects.last()
+        if keyword_last:
+            form.instance.order = keyword_last.pk + 1
+        else:
+            form.instance.order = 1
 
         current_user = self.request.user
         if current_user.is_authenticated:
