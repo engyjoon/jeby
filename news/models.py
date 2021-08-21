@@ -36,3 +36,11 @@ class Setting(models.Model):
 
     def __str__(self):
         return self.author.username
+
+
+class Site(models.Model):
+    address = models.CharField(max_length=100, verbose_name='Address')
+    description = models.CharField(max_length=100, verbose_name='Description')
+
+    def __str__(self):
+        return self.description
