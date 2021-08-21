@@ -53,11 +53,15 @@
                             {% for new in news %}
                                 <div class="news-item fs-6">
                                     {% if new.sitename == 'unknown' %}
-                                        <a type="button" class="btn btn-sm btn-outline-secondary btn-site me-1">
+                                        <a href="#"
+                                            id="siteEditModal-{{ forloop.counter }}"
+                                            type="button" class="btn btn-sm btn-outline-secondary btn-site me-1"
+                                            data-bs-toggle="modal" data-bs-target="#siteEditModal"
+                                            data-siteuri="{{ new.siteuri }}">
                                             등록하기</a>
                                     {% else %}
                                         <a type="button" class="btn btn-sm btn-secondary btn-site me-1" style="color:#ffffff;">
-                                        {{ new.sitename }}</a>
+                                            {{ new.sitename }}</a>
                                     {% endif %}
                                     <a href="{{ new.originallink }}" target="_blank">
                                         <span class="news-title">{{ new.title|safe|truncatechars:50 }}</span>
@@ -81,7 +85,7 @@
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">키워드 목록</h5>
+                <h5 class="modal-title" id="keywordListModalLabel">키워드 목록</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -109,6 +113,31 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="siteEditModal" tabindex="-1" aria-labelledby="siteEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="siteEditModalLabel">언론사 수정</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="modal-siteuri" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="modal-siteuri" disabled readonly>
+                </div>
+                <div class="mb-2">
+                    <label for="modal-sitedesc" class="form-label">Description</label>
+                    <input type="text" class="form-control" id="modal-sitedesc" autocomplete=off>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save</button>
             </div>
         </div>
     </div>

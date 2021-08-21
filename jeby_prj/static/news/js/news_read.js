@@ -14,4 +14,14 @@ $(document).ready(function () {
         $("#search-box").addClass("d-flex align-items-center h-50");
         $("#search-box").children().addClass("w-100");
     }
+
+    $("#siteEditModal").on('show.bs.modal', function(event) {
+        var data = $(event.relatedTarget).data('siteuri');
+        $("#modal-siteuri").val(data);
+        $("#modal-sitedesc").val('');
+    });
+
+    $("#siteEditModal").on('shown.bs.modal', function(event) {
+        $("#modal-sitedesc").focus();
+    });
 });

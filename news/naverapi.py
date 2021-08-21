@@ -31,9 +31,10 @@ news_list = {
 }
 
 
-def get_news_by_hour(keyword, start_hour=24, end_hour=0):
+def get_news_by_hour(keyword, start_hour:int=24, end_hour:int=0):
     """
     주어진 매개변수 시간만큼 최근 뉴스 리스트를 반환한다.
+    start_hour와 end_hour를 int 형식으로 받아 datetime 형식으로 변환한다.
     """
 
     now = datetime.now()
@@ -224,22 +225,23 @@ def send_email_by_schedule(current_time=None):
     return None
 
 
-def get_news(keyword, start_time=None, end_time=None):
+def get_news(keyword, start_time:datetime=None, end_time:datetime=None):
     """
     주어진 키워드 사용하여 네이버 검색 API를 끝까지 호출한다.
     start_time과 end_time이 지정될 경우 start_time과 end_time 구간 내 뉴스를 반환한다.
     """
 
-    news = []
     start = 1
     display = 100
 
+    news = []
     flag = True
     while flag:
         _list = call_naverapi(keyword, display, start, 'date')
         if _list:
             for i in _list:
-                # end_time이 존재하고 end_time보다 pubDate가 클 경우 news 리스트에 입력하지 않는다.
+                # end_time이 존재하고 end_time보다 pubDate가 클 경우
+                # news 리스트에 입력하지 않는다.
                 if end_time and end_time < parse(i['pubDate']):
                     continue
 
@@ -255,11 +257,15 @@ def get_news(keyword, start_time=None, end_time=None):
                 # 개별 뉴스의 발행시간을 datetime 형식으로 변환하여 다시 입력한다.
                 i['pubDate'] = parse(i['pubDate'])
 
-                # 개별 뉴스에 언론사 정보를 입력한다.
+                # 개별 뉴스에서 언론사 URI를 추출한다.
                 pattern = re.compile(r'^https?://([\w.-]*).*')
                 website = pattern.search(i.get('originallink'))
+
+                # 개별 뉴스에 언론사 정보를 입력한다.
                 if website is not None:
                     uri = website.group(1)
+                    i['siteuri'] = uri
+
                     if uri in news_list.keys():
                         i['sitename'] = news_list.get(uri).get('description')
                     else:
