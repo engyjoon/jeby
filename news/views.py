@@ -8,7 +8,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import UpdateView
 from django.core.exceptions import PermissionDenied
 
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
+
 from .models import Keyword, Setting
+from .serializers import SiteSerializer
 from . import naverapi
 
 
@@ -160,3 +164,8 @@ def email_setting(request):
             'email_recipients': email_recipients,
         }
     )
+
+
+class SiteCreateGenericAPIView(generics.CreateAPIView):
+    serializer_class = SiteSerializer
+    permission_classes = [IsAuthenticated]
