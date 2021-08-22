@@ -7,31 +7,13 @@ import urllib.parse
 from dateutil.parser import parse
 from django.conf import settings
 from django.core.mail import send_mail
-from .models import Setting, Keyword
+from .models import Setting, Keyword, Site
 
 
 KST = timezone(timedelta(hours=9))
 
-news_list = {
-    'yna.kr': {
-        'id': 'yna', 'description': '연합뉴스',
-    },
-    'news.mk.co.kr': {
-        'id': 'mk', 'description': '매일경제',
-    },
-    'news.jtbc.joins.com': {
-        'id': 'jtbc', 'description': 'JTBC',
-    },
-    'www.hankyung.com': {
-        'id': 'hankyung', 'description': '한국경제',
-    },
-    'news.joins.com': {
-        'id': 'joins', 'description': '중앙일보',
-    },
-}
 
-
-def get_news_by_hour(keyword, start_hour:int=24, end_hour:int=0):
+def get_news_by_hour(keyword, start_hour: int = 24, end_hour: int = 0):
     """
     주어진 매개변수 시간만큼 최근 뉴스 리스트를 반환한다.
     start_hour와 end_hour를 int 형식으로 받아 datetime 형식으로 변환한다.
@@ -225,7 +207,7 @@ def send_email_by_schedule(current_time=None):
     return None
 
 
-def get_news(keyword, start_time:datetime=None, end_time:datetime=None):
+def get_news(keyword, start_time: datetime = None, end_time: datetime = None):
     """
     주어진 키워드 사용하여 네이버 검색 API를 끝까지 호출한다.
     start_time과 end_time이 지정될 경우 start_time과 end_time 구간 내 뉴스를 반환한다.
@@ -233,6 +215,8 @@ def get_news(keyword, start_time:datetime=None, end_time:datetime=None):
 
     start = 1
     display = 100
+
+    sites = Site.objects.all()
 
     news = []
     flag = True
@@ -259,20 +243,24 @@ def get_news(keyword, start_time:datetime=None, end_time:datetime=None):
 
                 # 개별 뉴스에서 언론사 URI를 추출한다.
                 pattern = re.compile(r'^https?://([\w.-]*).*')
-                website = pattern.search(i.get('originallink'))
+                if i.get('originallink'):
+                    website = pattern.search(i.get('originallink'))
+                else:
+                    website = pattern.search(i.get('link'))
 
                 # 개별 뉴스에 언론사 정보를 입력한다.
                 if website is not None:
                     uri = website.group(1)
                     i['siteuri'] = uri
 
-                    if uri in news_list.keys():
-                        i['sitename'] = news_list.get(uri).get('description')
-                    else:
+                    try:
+                        i['sitename'] = sites.get(address=uri)
+                    except Site.DoesNotExist:
                         i['sitename'] = 'unknown'
                 else:
                     print('URI 추출 실패')
                     print(f'originallink : {i.get("originallink")}')
+                    print(f'link : {i.get("link")}')
 
                 news.append(i)
 
