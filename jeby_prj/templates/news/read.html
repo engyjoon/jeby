@@ -57,10 +57,14 @@
                                             id="siteEditModal-{{ forloop.counter }}"
                                             type="button" class="btn btn-sm btn-outline-secondary btn-site me-1"
                                             data-bs-toggle="modal" data-bs-target="#siteEditModal"
-                                            data-siteuri="{{ new.siteuri }}">
+                                            data-siteuri="{{ new.siteuri }}" data-sitename="">
                                             등록하기</a>
                                     {% else %}
-                                        <a type="button" class="btn btn-sm btn-secondary btn-site me-1" style="color:#ffffff;">
+                                        <a href="#"
+                                            id="siteEditModal-{{ forloop.counter }}"
+                                            type="button" class="btn btn-sm btn-secondary btn-site me-1" style="color:#ffffff;"
+                                            data-bs-toggle="modal" data-bs-target="#siteEditModal"
+                                            data-siteuri="{{ new.siteuri }}" data-sitename="{{ new.sitename }}">
                                             {{ new.sitename }}</a>
                                     {% endif %}
                                     <a href="{{ new.originallink }}" target="_blank">

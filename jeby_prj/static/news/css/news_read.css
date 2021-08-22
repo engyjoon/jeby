@@ -59,3 +59,8 @@
     background: #ffffff;
     color: #80808f;
 }
+
+.news-item .btn-secondary:hover {
+    background: #6c757d;
+    color: #ffffff;
+}

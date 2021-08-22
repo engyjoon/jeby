@@ -16,9 +16,10 @@ $(document).ready(function () {
     }
 
     $("#siteEditModal").on('show.bs.modal', function(event) {
-        var data = $(event.relatedTarget).data('siteuri');
-        $("#modal-siteuri").val(data);
-        $("#modal-sitedesc").val('');
+        var siteuri = $(event.relatedTarget).data('siteuri');
+        var sitename = $(event.relatedTarget).data('sitename');
+        $("#modal-siteuri").val(siteuri);
+        $("#modal-sitedesc").val(sitename);
     });
 
     $("#siteEditModal").on('shown.bs.modal', function(event) {
