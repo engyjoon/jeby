@@ -10,6 +10,7 @@ from django.core.exceptions import PermissionDenied
 
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
 from .models import Keyword, Setting
 from .serializers import SiteSerializer
@@ -168,4 +169,5 @@ def email_setting(request):
 
 class SiteCreateGenericAPIView(generics.CreateAPIView):
     serializer_class = SiteSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
