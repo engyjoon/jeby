@@ -12,5 +12,7 @@ urlpatterns = [
          views.KeywordUpdate.as_view(), name='keyword_update'),
     path('keyword/delete/<int:pk>/', views.keyword_delete, name='keyword_delete'),
     path('email/', views.email_setting, name='email_setting'),
-    path('site/post/', views.SiteCreateGenericAPIView.as_view(), name='site_create'),
+    path('site', views.SiteCreateGenericAPIView.as_view(), name='site_create'),
+    path('site/<int:pk>',
+         views.SiteUpdateGenericAPIView.as_view(), name='site_update'),
 ]

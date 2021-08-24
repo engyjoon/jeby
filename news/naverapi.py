@@ -255,6 +255,7 @@ def get_news(keyword, start_time: datetime = None, end_time: datetime = None):
 
                     try:
                         i['sitename'] = sites.get(address=uri)
+                        i['siteid'] = sites.get(address=uri).pk
                     except Site.DoesNotExist:
                         i['sitename'] = 'unknown'
                 else:

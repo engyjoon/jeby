@@ -58,7 +58,7 @@
                                             type="button" class="btn btn-sm btn-outline-secondary btn-site me-1"
                                             data-bs-toggle="modal" data-bs-target="#siteEditModal"
                                             data-siteuri="{{ new.siteuri }}" data-sitename=""
-                                            data-action="{% url 'news:site_create' %}">
+                                            data-action-url="{% url 'news:site_create' %}" data-action-type="create">
                                             등록하기</a>
                                     {% else %}
                                         <a href="#"
@@ -66,7 +66,7 @@
                                             type="button" class="btn btn-sm btn-secondary btn-site me-1"
                                             data-bs-toggle="modal" data-bs-target="#siteEditModal"
                                             data-siteuri="{{ new.siteuri }}" data-sitename="{{ new.sitename }}"
-                                            data-action="">
+                                            data-action-url="{% url 'news:site_update' new.siteid %}" data-action-type="update">
                                             {{ new.sitename }}</a>
                                     {% endif %}
                                     <a href="{{ new.originallink }}" target="_blank">

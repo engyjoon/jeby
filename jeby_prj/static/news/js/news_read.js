@@ -34,10 +34,20 @@ $(document).ready(function () {
     $("#siteEditModal").on('show.bs.modal', function (event) {
         var siteuri = $(event.relatedTarget).data('siteuri');
         var sitename = $(event.relatedTarget).data('sitename');
-        var action = $(event.relatedTarget).data('action');
+        var actionurl = $(event.relatedTarget).data('action-url');
+        var actiontype = $(event.relatedTarget).data('action-type');
+
         $("#modal-siteuri").val(siteuri);
         $("#modal-sitedesc").val(sitename);
-        $("#frmSiteEditModeal").attr("action", action)
+        $("#frmSiteEditModeal").attr("action", actionurl);
+
+        console.log(actionurl);
+
+        if (actiontype === 'create') {
+            $("#frmSiteEditModeal").attr("method", "POST");
+        } else if (actiontype === 'update') {
+            $("#frmSiteEditModeal").attr("method", "PUT");
+        }
     });
 
     $("#siteEditModal").on('shown.bs.modal', function (event) {
@@ -48,6 +58,7 @@ $(document).ready(function () {
         const csrftoken = getCookie('csrftoken');
 
         let url = $("#frmSiteEditModeal").attr("action");
+        let method = $("#frmSiteEditModeal").attr("method");
 
         let headers = {
             'X-CSRFToken': csrftoken
@@ -59,7 +70,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            method: 'POST',
+            method: method,
             url: url,
             headers: headers,
             data: data,
