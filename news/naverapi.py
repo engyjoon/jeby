@@ -153,8 +153,8 @@ def send_email_by_schedule(current_time=None):
 
                 mail_content += f'''
                     <div>
-                        <div><strong>[{keyword.title}]</strong></div>
-                        <div>
+                        <div style="font-size:11pt;"><strong>[{keyword.title}]</strong></div>
+                        <div style="font-size:11pt;">
                             검색어 &gt;&gt; {keyword.content}
                         </div>
                 '''
@@ -162,18 +162,26 @@ def send_email_by_schedule(current_time=None):
                 if news:
                     mail_content += f'''
                         <div>
-                            <table style="width:750px;">
-                                <tr style="background-color: #F0F0F0;">
-                                    <th style="width:85%; text-align:center;">기사제목</th>
-                                    <th style="width:15%; text-align:center;">발행시간</th>
+                            <table style="width:850px;">
+                                <tr style="background-color:#F0F0F0;">
+                                    <th style="width:20%; text-align:center; font-size:11pt;">언론사</th>
+                                    <th style="width:68%; text-align:center; font-size:11pt;">기사제목</th>
+                                    <th style="width:12%; text-align:center; font-size:11pt;">발행시간</th>
                                 </tr>
                     '''
 
                     for new in news:
+                        sitename = new.get('sitename')
+                        if sitename == 'unknown':
+                            sitename = ''
+
                         mail_content += f'''
                             <tr>
-                                <td><a href="{new.get('originallink')}">{new.get('title')}</a></td>
-                                <td style="text-align:center;">{new.get('pubDate').strftime('%m/%d %H:%M')}</td>
+                                <td style="font-size:11pt; text-align:center;">{sitename}</td>
+                                <td style="font-size:11pt;">
+                                    <a href="{new.get('originallink')}">{new.get('title')}</a>
+                                </td>
+                                <td style="font-size:11pt; text-align:center;">{new.get('pubDate').strftime('%m/%d %H:%M')}</td>
                             </tr>
                         '''
 
