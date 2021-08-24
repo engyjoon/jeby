@@ -58,10 +58,6 @@ $(document).ready(function () {
             description: $("#modal-sitedesc").val()
         }
 
-        console.log(url);
-        console.log(headers);
-        console.log(data);
-
         $.ajax({
             method: 'POST',
             url: url,
@@ -69,8 +65,12 @@ $(document).ready(function () {
             data: data,
             dataType: "json"
         })
-            .done(function (msg) {
-                console.log(msg)
+            .done(function () {
+                $("#siteEditModal").modal('hide');
+                $("#frm-search").submit();
+            })
+            .fail(function () {
+                console.log("fail!")
             });
     });
 });

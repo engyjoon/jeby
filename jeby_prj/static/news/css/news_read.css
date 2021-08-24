@@ -49,7 +49,7 @@
 }
 
 .btn-site {
-    width: 100px;
+    width: 140px;
     height: 26px;
     padding-top: 1px;
     padding-bottom: 2px;
@@ -60,7 +60,12 @@
     color: #80808f;
 }
 
+.news-item .btn-secondary {
+    background: #F2F2F2;
+    color: #1f274b;
+}
+
 .news-item .btn-secondary:hover {
-    background: #6c757d;
-    color: #ffffff;
+    background: #F2F2F2;
+    color: #1f274b;
 }
