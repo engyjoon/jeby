@@ -247,6 +247,7 @@ def get_news(keyword, start_time: datetime = None, end_time: datetime = None):
                     website = pattern.search(i.get('originallink'))
                 else:
                     website = pattern.search(i.get('link'))
+                    i['originallink'] = i.get('link')
 
                 # 개별 뉴스에 언론사 정보를 입력한다.
                 if website is not None:
