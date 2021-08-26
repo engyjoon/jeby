@@ -84,4 +84,15 @@ $(document).ready(function () {
                 console.log("fail!")
             });
     });
+
+    $(".check-sitename").click(function () {
+        target = $(this).children();
+        if (target.hasClass("bi-square")) {
+            target.removeClass("bi-square");
+            target.addClass("bi-check-square");
+        } else {
+            target.removeClass("bi-check-square");
+            target.addClass("bi-square");
+        }
+    })
 });

@@ -52,25 +52,30 @@
                         {% if news %}
                             {% for new in news %}
                                 <div class="news-item fs-6">
-                                    {% if new.sitename == 'unknown' %}
-                                        <a href="#"
-                                            id="siteEditModal-{{ forloop.counter }}"
-                                            type="button" class="btn btn-sm btn-outline-secondary btn-site me-1"
-                                            data-bs-toggle="modal" data-bs-target="#siteEditModal"
-                                            data-siteuri="{{ new.siteuri }}" data-sitename=""
-                                            data-action-url="{% url 'news:site_create' %}" data-action-type="create">
-                                            등록하기</a>
-                                    {% else %}
-                                        <a href="#"
-                                            id="siteEditModal-{{ forloop.counter }}"
-                                            type="button" class="btn btn-sm btn-secondary btn-site me-1"
-                                            data-bs-toggle="modal" data-bs-target="#siteEditModal"
-                                            data-siteuri="{{ new.siteuri }}" data-sitename="{{ new.sitename }}"
-                                            data-action-url="{% url 'news:site_update' new.siteid %}" data-action-type="update">
-                                            {{ new.sitename }}</a>
-                                    {% endif %}
+                                    <span class="check-sitename me-2">
+                                        <i class="bi bi-square"></i>
+                                    </span>
+                                    <span class="box-sitename me-2">
+                                        {% if new.sitename == 'unknown' %}
+                                            <a href="#" style="font-weight:100; color:#D9C3CE"
+                                                id="siteEditModal-{{ forloop.counter }}"
+                                                data-bs-toggle="modal" data-bs-target="#siteEditModal"
+                                                data-siteuri="{{ new.siteuri }}" data-sitename=""
+                                                data-action-url="{% url 'news:site_create' %}" data-action-type="create">
+                                                등록하기</a>
+                                        {% else %}
+                                            <a href="#"
+                                                id="siteEditModal-{{ forloop.counter }}"
+                                                data-bs-toggle="modal" data-bs-target="#siteEditModal"
+                                                data-siteuri="{{ new.siteuri }}" data-sitename="{{ new.sitename }}"
+                                                data-action-url="{% url 'news:site_update' new.siteid %}" data-action-type="update">
+                                                {{ new.sitename }}</a>
+                                        {% endif %}
+                                    </span>
                                     <a href="{{ new.originallink }}" target="_blank">
-                                        <span class="news-title">{{ new.title|safe|truncatechars:50 }}</span>
+                                        <span class="news-title" style="font-weight:400;">
+                                            {{ new.title|safe|truncatechars:50 }}
+                                        </span>
                                         <span class="badge bg-light text-dark">{{ new.pubDate|date:"Y/m/d H:i:s" }}</span>
                                     </a>
                                 </div>
