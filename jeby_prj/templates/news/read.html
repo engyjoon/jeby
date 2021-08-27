@@ -42,11 +42,24 @@
         </form>
 
         {% if form %}
+        <div class="row mb-3" id="selectedNews">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        선택뉴스 (<span id="selectedCount"></span>건)
+                    </div>
+                    <div class="card-body py-2">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row mb-3">
             <div class="col">
                 <div class="card">
                     <div class="card-header">
-                        검색결과 ({{ news|length }}건)
+                        검색뉴스 ({{ news|length }}건)
                     </div>
                     <div class="card-body py-2">
                         {% if news %}
@@ -61,14 +74,16 @@
                                                 id="siteEditModal-{{ forloop.counter }}"
                                                 data-bs-toggle="modal" data-bs-target="#siteEditModal"
                                                 data-siteuri="{{ new.siteuri }}" data-sitename=""
-                                                data-action-url="{% url 'news:site_create' %}" data-action-type="create">
+                                                data-action-url="{% url 'news:site_create' %}" data-action-type="create"
+                                                data-sitename="">
                                                 등록하기</a>
                                         {% else %}
                                             <a href="#"
                                                 id="siteEditModal-{{ forloop.counter }}"
                                                 data-bs-toggle="modal" data-bs-target="#siteEditModal"
                                                 data-siteuri="{{ new.siteuri }}" data-sitename="{{ new.sitename }}"
-                                                data-action-url="{% url 'news:site_update' new.siteid %}" data-action-type="update">
+                                                data-action-url="{% url 'news:site_update' new.siteid %}" data-action-type="update"
+                                                data-sitename="{{ new.sitename }}">
                                                 {{ new.sitename }}</a>
                                         {% endif %}
                                     </span>
