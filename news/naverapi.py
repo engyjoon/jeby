@@ -173,7 +173,7 @@ def send_email_by_schedule(current_time=None):
                     for new in news:
                         sitename = new.get('sitename')
                         if sitename == 'unknown':
-                            sitename = ''
+                            sitename = '-'
 
                         mail_content += f'''
                             <tr>
