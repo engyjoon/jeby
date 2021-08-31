@@ -95,8 +95,6 @@ def send_email_by_schedule(current_time=None):
                     hour=int(_time[0]), minute=int(_time[1]), second=0, tzinfo=KST)
                 end_time = end_time + timedelta(seconds=-1)
 
-                print('start_time:', start_time)
-                print('end_time:', end_time)
             # 함수 호출 시 입력한 시간이 메일 발송 시간에 존재하지 않으면 다음 사용자 처리
             else:
                 continue
