@@ -29,6 +29,8 @@ $(document).ready(function () {
     // 네비게이션바에서 해당 메뉴를 활성화한다.
     $(".nav-link").eq(0).addClass("active");
 
+    $("#input-keyword").focus();
+
     // 검색버튼을 선택하면 검색을 수행한다.
     $("#search-img").click(function () {
         $("#frm-search").submit();
