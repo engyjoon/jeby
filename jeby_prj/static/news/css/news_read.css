@@ -34,28 +34,20 @@
     color: #80808f;
 }
 
-.news-item {
+.news-item, 
+.news-item-selected {
     border-bottom: 1px solid #C5D7E6;
     padding: 9px 0px;
 }
 
-.news-item:last-child {
+.news-item:last-child,
+.news-item-selected:last-child {
     border-width: 0px;
 }
 
 .news-item a {
     text-decoration: none;
     color: #6c757d;
-}
-
-.news-item .btn-secondary {
-    background: #F2F2F2;
-    color: #1f274b;
-}
-
-.news-item .btn-secondary:hover {
-    background: #F2F2F2;
-    color: #1f274b;
 }
 
 .check-sitename {

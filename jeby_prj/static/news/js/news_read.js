@@ -137,7 +137,9 @@ $(document).ready(function () {
             '       <i class="bi bi-check-square"></i> ' +
             '   </span> ' +
             '   <span class="box-sitename me-2"> ' + news_sitename + '</span> ' +
+            '   <span class="news-title" style="font-weight:400;">' + news_title + '</span>' +
             '</div>';
         console.log(html);
+        $("#selectedNewsBody").append(html);
     });
 });
