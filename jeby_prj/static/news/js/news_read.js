@@ -29,6 +29,7 @@ $(document).ready(function () {
     // 네비게이션바에서 해당 메뉴를 활성화한다.
     $(".nav-link").eq(0).addClass("active");
 
+    // 화면 오픈 시 검색창에 커서를 이동시킨다.
     $("#input-keyword").focus();
 
     // 검색버튼을 선택하면 검색을 수행한다.
