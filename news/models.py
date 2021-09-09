@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from django.contrib.auth.models import User
+from django.db.models import constraints
 from django.db.models.fields import CharField
 
 
@@ -22,6 +23,26 @@ class Keyword(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=['title', 'author'], name='unique title for author')
+        ]
+
+
+class Recipient(models.Model):
+    name = models.CharField(max_length=50, verbose_name='이름')
+    email = models.EmailField(verbose_name='이메일')
+    note = models.CharField(max_length=50, verbose_name='비고', null=False, blank=True)
+    order = models.IntegerField(
+        validators=[MinValueValidator(1)],
+        unique=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        ordering = ['order']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['name', 'author'], name='unique name for author')
         ]
 
 

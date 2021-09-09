@@ -13,7 +13,7 @@ $(document).ready(function () {
         </tr> \
     ";
 
-    $(".nav-link").eq(2).addClass("active");
+    $(".nav-link").eq(3).addClass("active");
 
     if (email_send_times != 'None') {
         email_send_times = email_send_times.split(';');

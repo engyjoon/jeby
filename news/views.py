@@ -13,7 +13,7 @@ from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
-from .models import Keyword, Setting, Site
+from .models import Keyword, Recipient, Setting, Site
 from .serializers import SiteSerializer
 from . import naverapi, utils
 
@@ -140,6 +140,75 @@ def keyword_delete(request, pk):
     if request.user == keyword.author:
         keyword.delete()
         return redirect('news:keyword')
+    else:
+        raise PermissionDenied
+
+
+class RecipientList(LoginRequiredMixin, ListView):
+    """
+    수신자 리스트를 반환한다.
+    """
+    login_url = 'common:login'
+    model = Recipient
+
+    def get_queryset(self):
+        current_user = self.request.user
+        recipient_list = Recipient.objects.filter(author=current_user)
+
+        return recipient_list
+
+
+class RecipientCreate(LoginRequiredMixin, CreateView):
+    """
+    수신자를 생성한다.
+    """
+    login_url = 'common:login'
+    success_url = reverse_lazy('news:recipient')
+    model = Recipient
+    fields = ['name', 'email', 'note']
+
+    def form_valid(self, form):
+        recipient_last = Recipient.objects.last()
+        if recipient_last:
+            form.instance.order = recipient_last.pk + 1
+        else:
+            form.instance.order = 1
+
+        current_user = self.request.user
+        if current_user.is_authenticated:
+            form.instance.author = current_user
+            response = super(RecipientCreate, self).form_valid(form)
+
+            return response
+        else:
+            return redirect('news:recipient')
+
+
+class RecipientUpdate(LoginRequiredMixin, UpdateView):
+    """
+    수신자를 수정한다.
+    """
+    login_url = 'common:login'
+    success_url = reverse_lazy('news:recipient')
+    model = Recipient
+    fields = ['name', 'email', 'note']
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user == self.get_object().author:
+            return super(RecipientUpdate, self).dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
+
+
+@login_required(login_url='common:login')
+def recipient_delete(request, pk):
+    """
+    수신자를 삭제한다.
+    """
+    recipient = get_object_or_404(Recipient, pk=pk)
+    if request.user == recipient.author:
+        recipient.delete()
+        return redirect('news:recipient')
     else:
         raise PermissionDenied
 

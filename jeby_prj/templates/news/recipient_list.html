@@ -1,0 +1,45 @@
+{% extends 'base_news.html' %}
+
+{% load static %}
+
+{% block custom_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'news/css/recipient_list.css' %}"/>
+{% endblock custom_css %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="d-flex flex-row-reverse mb-2">
+                <a href="{% url 'news:recipient_create' %}" type="button" class="btn btn-primary">등록</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="width:10%;">이름</th>
+                            <th scope="col" style="width:20%;">이메일</th>
+                            <th scope="col">비고</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for recipient in recipient_list %}
+                        <tr>
+                            <td scope="row"><a href="{% url 'news:recipient_update' recipient.id %}">{{ recipient.name }}</a></td>
+                            <td><a href="{% url 'news:recipient_update' recipient.id %}">{{ recipient.email }}</a></td>
+                            <td><a href="{% url 'news:recipient_update' recipient.id %}">{{ recipient.note }}</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+    {{ block.super }}
+    <script src="{% static 'news/js/recipient_list.js' %}"></script>
+{% endblock script %}

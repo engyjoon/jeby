@@ -1,0 +1,59 @@
+{% extends 'base_news.html' %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block custom_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'news/css/recipient_form.css' %}"/>
+{% endblock custom_css %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <form method="post">
+                {% csrf_token %}
+                <table>
+                    {{ form | crispy }}
+                </table>
+                <div class="float-end">
+                    <a href="{% url 'news:recipient' %}" type="button" class="btn btn-outline-secondary" id="btn-list">목록</a>
+                    <button type="sumit" class="btn btn-primary">저장</button>
+                    {% if recipient %}
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" 
+                        data-bs-target="#deleterecipientModal">삭제</button>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteRecipientModal" tabindex="-1" aria-labelledby="deleteRecipientModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">삭제하기</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        정말 삭제하시겠습니까?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        {% if recipient %}
+            <a href="{% url 'news:recipient_delete' recipient.id %}" type="button" class="btn btn-danger">Delete</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+{% endblock content %}
+
+{% block script %}
+    {{ block.super }}
+    <script src="{% static 'news/js/recipient_form.js' %}"></script>
+{% endblock script %}

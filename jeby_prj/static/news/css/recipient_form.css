@@ -1,0 +1,8 @@
+.form-group {
+    margin-bottom: 12px;
+}
+
+#btn-list:hover {
+    background: #ffffff;
+    color: #80808f;
+}
