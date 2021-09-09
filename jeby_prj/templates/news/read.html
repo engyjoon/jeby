@@ -186,7 +186,7 @@
                         <select class="form-select" id="selectRecipient">
                             <option value="" selected>선택하세요.</option>
                             {% for user in email_users %}
-                                <option value="{{ user.email }}">{{ user.email }} ({{ user.last_name }}{{user.first_name }})</option>
+                                <option value="{{ user.email }}">{{ user.email }} ({{ user.name }})</option>
                             {% endfor %}
                         </select>
                     </div>

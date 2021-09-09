@@ -47,12 +47,8 @@ def news_search(request):
     current_user = request.user
     keywords = Keyword.objects.filter(author=current_user)
 
-    email_users = None
-    try:
-        news_share_group_id = Group.objects.get(name='news_share').pk
-        email_users = User.objects.filter(groups=news_share_group_id).order_by('email')
-    except Group.DoesNotExist:
-        pass
+    # 수신자를 조회한다.
+    email_users = Recipient.objects.filter(author=current_user)
 
     news = None
     if request.method == 'POST':
