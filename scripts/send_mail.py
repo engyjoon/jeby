@@ -1,3 +1,3 @@
-from news import naverapi
+from news import utils
 
-naverapi.send_email_by_schedule()
+utils.send_email_by_schedule()
