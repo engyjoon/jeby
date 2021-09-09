@@ -1,3 +1,8 @@
+a {
+    text-decoration: none;
+    color: #6c757d;
+}
+
 #search-title {
     font-family: 'Noto Sans KR', sans-serif;
     font-weight: 400;
@@ -45,12 +50,8 @@
     border-width: 0px;
 }
 
-.news-item a {
-    text-decoration: none;
-    color: #6c757d;
-}
-
-.check-sitename {
+.check-sitename,
+.checked-sitename {
     display:inline-box;
 }
 
