@@ -47,8 +47,12 @@ def news_search(request):
     current_user = request.user
     keywords = Keyword.objects.filter(author=current_user)
 
-    news_share_group_id = Group.objects.get(name='news_share').pk
-    email_users = User.objects.filter(groups=news_share_group_id).order_by('email')
+    email_users = None
+    try:
+        news_share_group_id = Group.objects.get(name='news_share').pk
+        email_users = User.objects.filter(groups=news_share_group_id).order_by('email')
+    except Group.DoesNotExist:
+        pass
 
     news = None
     if request.method == 'POST':

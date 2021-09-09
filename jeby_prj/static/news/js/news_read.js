@@ -220,14 +220,14 @@ $(document).ready(function () {
         let title = $("#message-title").val();
         let message = $("#message-text").val();
 
-        // 제목을 선택하지 않을 경우 경보를 발생시킨다.
-        if (title === '') {
-            $("#shareNewsModalMessage").html('제목을 선택해주세요.');
+        // 수신자를 선택하지 않을 경우 경보를 발생시킨다.
+        if (recipient === '') {
+            $("#shareNewsModalMessage").html('수신자를 선택해주세요.');
             $("#shareNewsModalMessage").removeClass('alert-primary').addClass('alert-danger');
             $("#shareNewsModalMessage").css('display', 'block');
-        // 수신자를 선택하지 않을 경우 경보를 발생시킨다.
-        } else if (recipient === '') {
-            $("#shareNewsModalMessage").html('수신자를 선택해주세요.');
+        // 제목을 선택하지 않을 경우 경보를 발생시킨다.
+        } else if (title === '') {
+            $("#shareNewsModalMessage").html('제목을 선택해주세요.');
             $("#shareNewsModalMessage").removeClass('alert-primary').addClass('alert-danger');
             $("#shareNewsModalMessage").css('display', 'block');
         } else {
