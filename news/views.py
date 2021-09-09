@@ -1,20 +1,21 @@
-import pprint as pp
-
 from django.views.generic import ListView, DetailView, CreateView
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
+from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import UpdateView
 from django.core.exceptions import PermissionDenied
+from django.contrib.auth.models import User, Group
 
 from rest_framework import generics
+from rest_framework.decorators import api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
 from .models import Keyword, Setting, Site
 from .serializers import SiteSerializer
-from . import naverapi
+from . import naverapi, utils
 
 
 @login_required(login_url='common:login')
@@ -22,7 +23,6 @@ def index(request):
     """
     뉴스 검색 첫 페이지
     """
-
     keywords = Keyword.objects.all()
 
     return render(
@@ -39,7 +39,6 @@ def news_search(request):
     """
     키워드로 뉴스를 검색한다.
     """
-
     form = {}
     error_msg = None
     template_name = 'news/read.html'
@@ -47,6 +46,9 @@ def news_search(request):
     # 사용자가 등록한 키워드를 조회하여 반환한다.
     current_user = request.user
     keywords = Keyword.objects.filter(author=current_user)
+
+    news_share_group_id = Group.objects.get(name='news_share').pk
+    email_users = User.objects.filter(groups=news_share_group_id).order_by('email')
 
     news = None
     if request.method == 'POST':
@@ -68,6 +70,7 @@ def news_search(request):
             'form': form,
             'error_msg': error_msg,
             'keywords': keywords,
+            'email_users': email_users,
         }
     )
 
@@ -75,7 +78,6 @@ def news_search(request):
 class KeywordList(LoginRequiredMixin, ListView):
     """
     """
-
     login_url = 'common:login'
     model = Keyword
 
@@ -89,7 +91,6 @@ class KeywordList(LoginRequiredMixin, ListView):
 class KeywordCreate(LoginRequiredMixin, CreateView):
     """
     """
-
     login_url = 'common:login'
     success_url = reverse_lazy('news:keyword')
     model = Keyword
@@ -115,7 +116,6 @@ class KeywordCreate(LoginRequiredMixin, CreateView):
 class KeywordUpdate(LoginRequiredMixin, UpdateView):
     """
     """
-
     login_url = 'common:login'
     success_url = reverse_lazy('news:keyword')
     model = Keyword
@@ -132,7 +132,6 @@ class KeywordUpdate(LoginRequiredMixin, UpdateView):
 def keyword_delete(request, pk):
     """
     """
-
     keyword = get_object_or_404(Keyword, pk=pk)
     if request.user == keyword.author:
         keyword.delete()
@@ -145,7 +144,6 @@ def keyword_delete(request, pk):
 def email_setting(request):
     """
     """
-
     # setting = get_object_or_404(Setting, author=request.user.id)
     settings = Setting.objects.filter(author=request.user.id)
 
@@ -178,3 +176,17 @@ class SiteUpdateGenericAPIView(generics.UpdateAPIView):
     serializer_class = SiteSerializer
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
+
+
+@login_required(login_url='common:login')
+@api_view(['GET', 'POST'])
+def share_news(request):
+    """
+    뉴스 검색 후 선택한 뉴스를 공유하면
+    지정된 수신자에게 선택한 뉴스를 이메일 발송한다.
+    """
+    if request.method == 'POST':
+        data = request.data
+        utils.send_email_by_share(data)
+        
+        return JsonResponse({'result': 'success'})
