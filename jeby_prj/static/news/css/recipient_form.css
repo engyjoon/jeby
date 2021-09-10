@@ -1,3 +1,9 @@
+a,
+a:hover {
+    text-decoration: none;
+    color: #6c757d;
+}
+
 .form-group {
     margin-bottom: 12px;
 }
