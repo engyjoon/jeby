@@ -1,4 +1,5 @@
-a {
+a,
+a:hover {
     text-decoration: none;
     color: #6c757d;
 }
@@ -20,7 +21,7 @@ a {
 }
 
 #recipient {
-    height: 625px;
+    height: 618px;
 }
 
 .email-address {
