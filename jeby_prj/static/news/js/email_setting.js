@@ -15,7 +15,7 @@ $(document).ready(function () {
 
     $(".nav-link").eq(3).addClass("active");
 
-    if (email_send_times != 'None') {
+    if (email_send_times !== 'None') {
         email_send_times = email_send_times.split(';');
         for (i in email_send_times) {
             $("#send-time .hour").each(function (index) {
@@ -26,7 +26,13 @@ $(document).ready(function () {
         }
     }
 
-    if (email_recipients != 'None') {
+    if (work_hour !== 'None') {
+        work_hour = work_hour.split(';');
+        $("#workTimeStart").val(work_hour[0]);
+        $("#workTimeEnd").val(work_hour[1]);
+    }
+
+    if (email_recipients !== 'None') {
         email_recipients = email_recipients.split(';');
         for (i in email_recipients) {
             email_recipient = email_recipients[i].split(',');

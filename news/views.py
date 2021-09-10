@@ -6,7 +6,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import UpdateView
 from django.core.exceptions import PermissionDenied
-from django.contrib.auth.models import User, Group
 
 from rest_framework import generics
 from rest_framework.decorators import api_view
@@ -143,6 +142,7 @@ def keyword_delete(request, pk):
 class RecipientList(LoginRequiredMixin, ListView):
     """
     수신자 리스트를 반환한다.
+    수신자관리 페이지에서 사용한다.
     """
     login_url = 'common:login'
     model = Recipient
@@ -157,6 +157,7 @@ class RecipientList(LoginRequiredMixin, ListView):
 class RecipientCreate(LoginRequiredMixin, CreateView):
     """
     수신자를 생성한다.
+    수신자관리 페이지에서 사용한다.
     """
     login_url = 'common:login'
     success_url = reverse_lazy('news:recipient')
@@ -183,6 +184,7 @@ class RecipientCreate(LoginRequiredMixin, CreateView):
 class RecipientUpdate(LoginRequiredMixin, UpdateView):
     """
     수신자를 수정한다.
+    수신자관리 페이지에서 사용한다.
     """
     login_url = 'common:login'
     success_url = reverse_lazy('news:recipient')
@@ -200,6 +202,7 @@ class RecipientUpdate(LoginRequiredMixin, UpdateView):
 def recipient_delete(request, pk):
     """
     수신자를 삭제한다.
+    수신자관리 페이지에서 사용한다.
     """
     recipient = get_object_or_404(Recipient, pk=pk)
     if request.user == recipient.author:
@@ -212,23 +215,28 @@ def recipient_delete(request, pk):
 @login_required(login_url='common:login')
 def email_setting(request):
     """
+    이메일 설정 정보를 반환한다.
+    이메일설정 페이지에서 사용한다.
     """
-    # setting = get_object_or_404(Setting, author=request.user.id)
-    settings = Setting.objects.filter(author=request.user.id)
-
     email_send_times = None
+    work_hour = None
     email_recipients = None
 
-    if settings.exists():
-        for setting in settings:
-            email_send_times = setting.email_send_time
-            email_recipients = setting.email_recipient
+    try:
+        settings = Setting.objects.get(author=request.user.id)
+
+        email_send_times = settings.email_send_time
+        work_hour = settings.work_hour
+        email_recipients = settings.email_recipient
+    except Setting.DoesNotExist:
+        pass
 
     return render(
         request,
         'news/email_setting.html',
         {
             'email_send_times': email_send_times,
+            'work_hour': work_hour,
             'email_recipients': email_recipients,
         }
     )

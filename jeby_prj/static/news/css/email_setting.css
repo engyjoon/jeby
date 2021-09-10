@@ -16,11 +16,11 @@ a {
 }
 
 #send-time {
-    height: 500px;
+    height: 355px;
 }
 
 #recipient {
-    height: 500px;
+    height: 625px;
 }
 
 .email-address {
@@ -28,35 +28,27 @@ a {
 }
 
 @media (max-width: 1400px) {
-.hour {
-    border: 1px solid #6c757d;
-    margin: 5px 2px;
-    padding: 2px 17px;
-    /* font-size: 0.9rem; */
-}
+    .hour {
+        border: 1px solid #6c757d;
+        margin: 5px 2px;
+        padding: 2px 17px;
+        /* font-size: 0.9rem; */
+    }
 
-#send-time {
-    height: 322px;
-}
-
-#recipient {
-    height: 500px;
-}
+    #send-time {
+        height: 322px;
+    }
 }
 
 @media (max-width: 600px) {
-.hour {
-    border: 1px solid #6c757d;
-    margin: 4px 0px;
-    padding: 1px 5px;
-    /* font-size: 0.9rem; */
-}
+    .hour {
+        border: 1px solid #6c757d;
+        margin: 4px 0px;
+        padding: 1px 5px;
+        /* font-size: 0.9rem; */
+    }
 
-#send-time {
-    height: 322px;
-}
-
-#recipient {
-    height: 500px;
-}
+    #send-time {
+        height: 322px;
+    }
 }
