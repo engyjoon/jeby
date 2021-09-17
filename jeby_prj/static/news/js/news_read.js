@@ -30,7 +30,10 @@ $(document).ready(function () {
     $(".nav-link").eq(0).addClass("active");
 
     // 화면 오픈 시 검색창에 커서를 이동시킨다.
+    // 커서를 검색어 마지막에 위치시킨다.
+    _keyword = $("#input-keyword").val();
     $("#input-keyword").focus();
+    $("#input-keyword").val('').val(_keyword);
 
     // 검색버튼을 선택하면 검색을 수행한다.
     $("#search-img").click(function () {
