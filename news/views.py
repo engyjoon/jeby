@@ -303,7 +303,6 @@ class SettingUpdate(LoginRequiredMixin, UpdateView):
             raise PermissionDenied
 
     def form_valid(self, form):
-        print('form_valid')
         response = super(SettingUpdate, self).form_valid(form)
         self.object.email_recipients.clear()
 

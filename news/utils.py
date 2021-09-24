@@ -22,21 +22,23 @@ def send_email_by_schedule(current_time=None):
         current_time = str(now.hour).zfill(2) + ':' + str(now.minute).zfill(2)
 
     # 사용자 설정값을 조회하여 메일을 발송한다.
-    rows = Setting.objects.all()
-    for row in rows:
-        email_send_time = row.email_send_time
-        email_recipient = row.email_recipient
+    user_settings = Setting.objects.all()
+    for user_setting in user_settings:
+        # 이메일 발송 시간을 저장한다.
+        email_send_time = user_setting.email_send_time
+        # 이메일 수신자를 저장한다.
+        email_recipients = user_setting.email_recipients.all()
 
         # 사용자가 설정한 키워드들을 조회한다. 메일 발송 여부가 True인 것만 조회한다.
-        keywords = Keyword.objects.filter(author=row.author.id)
+        keywords = Keyword.objects.filter(author=user_setting.author.id)
         keywords = keywords.filter(mailing=True)
 
         # 이메일 발송 시간, 이메일 수신자, 키워드가 존재할 경우 아래 내요을 실행한다.
-        if email_send_time and email_recipient and keywords:
+        if email_send_time and email_recipients and keywords:
             # 업무 시간 텍스트를 전처리한다. (시작 시간, 종료 시간)
-            work_hour = row.work_hour
+            work_hour = user_setting.work_hour
             if work_hour is not None:
-                _work_hour = row.work_hour.split(';')
+                _work_hour = user_setting.work_hour.split(';')
                 # _work_hour_start = _work_hour[0].split(':')
                 _work_hour_end = _work_hour[1].split(':')
                 # work_hour_start = now.replace(
@@ -45,7 +47,7 @@ def send_email_by_schedule(current_time=None):
                     hour=int(_work_hour_end[0]), minute=int(_work_hour_end[1]), second=0, tzinfo=KST)
 
             # 사용자가 설정한 메일 발송 시간 텍스트를 전처리한다.
-            times = row.email_send_time.split(';')
+            times = user_setting.email_send_time.split(';')
             # 함수 호출 시 입력한 시간이 메일 발송 시간에 존재할 경우 처리한다.
             if current_time in times:
                 # 함수 호출 시 입력한 시간이 사용자가 설정한 메일 발송 시간 중 몇 번째인지 확인한다.
@@ -82,10 +84,11 @@ def send_email_by_schedule(current_time=None):
                 continue
 
             # 사용자 이름은 제외하고 메일주소만 recipients 리스트에 입력한다.
-            _recipients = email_recipient.split(';')
+            # _recipients = email_recipient.split(';')
             recipients = []
-            for recipient in _recipients:
-                recipients.append(recipient.split(',')[1])
+            for recipient in email_recipients:
+                # recipients.append(recipient.split(',')[1])
+                recipients.append(recipient.email)
 
             # 메일 제목을 작성한다.
             # 함수 호출 시 입력한 시간을 사용한다.
