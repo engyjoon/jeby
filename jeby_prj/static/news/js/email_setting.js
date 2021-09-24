@@ -2,19 +2,19 @@ $(document).ready(function () {
     html_email = "\
         <tr class='text-center'> \
             <td scope='row'> \
-                <input type='text' class='text-center' style='width:95%;' value='#input_name#' disabled readonly> \
+                <input type='email' class='form-control form-control-sm email-address' style='width:100%;' \
+                value='#input_email#' data-recipient='#recipient#' disabled readonly> \
             </td> \
             <td scope='row'> \
-                <input type='email' class='text-left email-address' style='width:95%;' value='#input_email#' disabled readonly> \
-            </td> \
-            <td scope='row'> \
-                <a type='button' class='btn btn-sm btn-danger' style='width:95%;'>삭제</a> \
+                <a type='button' class='btn btn-sm btn-danger btn-remove-email' style='width:95%;'>삭제</a> \
             </td> \
         </tr> \
     ";
 
+    // 이메일 설정 메뉴 활성화시킨다.
     $(".nav-link").eq(3).addClass("active");
 
+    // 이메일 발송 시간을 표시한다.
     if (email_send_times !== 'None') {
         email_send_times = email_send_times.split(';');
         for (i in email_send_times) {
@@ -26,38 +26,55 @@ $(document).ready(function () {
         }
     }
 
+    // 업무 시간을 표시한다.
     if (work_hour !== 'None') {
         work_hour = work_hour.split(';');
         $("#workTimeStart").val(work_hour[0]);
         $("#workTimeEnd").val(work_hour[1]);
     }
 
-    if (email_recipients !== 'None') {
-        email_recipients = email_recipients.split(';');
-        for (i in email_recipients) {
-            email_recipient = email_recipients[i].split(',');
-            recipient_name = email_recipient[0];
-            recipient_email = email_recipient[1];
-
-            html_result = html_email.replace('#input_name#', recipient_name).replace('#input_email#', recipient_email);
-
-            $("#email-list").append(html_result);
-        }
-    }
-
+    // 이메일 수신자 추가 버튼을 선택하면 실행한다.
     $("#add-email").click(function () {
-        input_name = $("#input-name").val();
-        input_email = $("#input-email").val();
-
-        html_result = html_email.replace('#input_name#', input_name).replace('#input_email#', input_email);
+        selected_email = $("#selectRecipient option:selected").html();
+        selected_value = $("#selectRecipient option:selected").val();
+        html_result = html_email.replace('#input_email#', selected_email).replace('#recipient#', selected_value);
 
         $("#email-list").append(html_result);
-
-        $("#input-name").val('');
-        $("#input-email").val('');
+        $("#selectRecipient option:eq(0)").prop("selected", true);
     });
 
+    // 이메일 수신자 삭제 버튼을 선택하면 실행한다.
+    // append 메소드로 동적으로 추가된 요소에 click 이벤트를 설정한다.
+    // 동적으로 이벤트를 설정할 때는 on 메소드를 사용해야 한다.
+    // 첫 번째 선택 요소는 동적으로 추가된 요소가 아니어야 한다. (#email-list)
+    $("#email-list").on('click', '.btn-remove-email', function () {
+        $(this).parent().parent().detach();
+    });
+
+    // 이메일 발송 시간을 선택하면 활성화시킨다.
     $("#send-time .hour").click(function () {
         $(this).toggleClass("time-active");
     });
+
+    // 이메일 설정 페이지 수정 버튼을 선택하면 아래 내용이 실행된다.
+    $("#btnApplySendTime").click(function () {
+        var activeTimes = new Array();
+        $(".time-active").each(function (idx) {
+            activeTimes[idx] = $(this).html()
+        });
+
+        var workTimeStart = $("#workTimeStart").val();
+        var workTimeEnd = $("#workTimeEnd").val();
+        var workTime = workTimeStart + ";" + workTimeEnd;
+
+        var emailAddresses = new Array();
+        $(".email-address").each(function (idx) {
+            emailAddresses[idx] = $(this).data('recipient');
+        });
+
+        $("#frmMain [name='email_send_time']").val(activeTimes.join(";"));
+        $("#frmMain [name='work_hour']").val(workTime);
+        $("#frmMain [name='email_recipients_str']").val(emailAddresses.join(";"));
+        $("#frmMain").submit();
+    })
 });

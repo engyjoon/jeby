@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from .models import Site
+from .models import Site, Setting
 
 
 class SiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Site
-        fields = '__all__'
+        fields = ['address', 'description']

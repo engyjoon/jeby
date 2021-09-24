@@ -17,6 +17,7 @@ urlpatterns = [
         views.RecipientUpdate.as_view(), name='recipient_update'),
     path('recipient/delete/<int:pk>/', views.recipient_delete, name='recipient_delete'),
     path('email/', views.email_setting, name='email_setting'),
+    path('email/update/<int:pk>/', views.SettingUpdate.as_view(), name='setting_update'),
     path('site', views.SiteCreateGenericAPIView.as_view(), name='site_create'),
     path('site/<int:pk>',
         views.SiteUpdateGenericAPIView.as_view(), name='site_update'),

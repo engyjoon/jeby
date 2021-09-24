@@ -204,7 +204,7 @@ def send_email_by_share(data):
     # 이메일 제목
     title = data.get('title')
     # 이메일 메시지
-    message = data.get('message').replace('\n','<br>')
+    message = data.get('message').replace('\n', '<br>')
     # 공유 뉴스
     news = json.loads(data.get('news'))
 

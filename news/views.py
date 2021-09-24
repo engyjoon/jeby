@@ -20,7 +20,7 @@ from . import naverapi, utils
 @login_required(login_url='common:login')
 def index(request):
     """
-    뉴스 검색 첫 페이지
+    뉴스 검색 첫 페이지를 반환한다.
     """
     keywords = Keyword.objects.all()
 
@@ -36,6 +36,7 @@ def index(request):
 @login_required(login_url='common:login')
 def news_search(request):
     """
+    키워드 검색 페이지에서 사용한다.
     키워드로 뉴스를 검색한다.
     """
     form = {}
@@ -76,6 +77,8 @@ def news_search(request):
 
 class KeywordList(LoginRequiredMixin, ListView):
     """
+    키워드 관리 페이지에서 사용한다.
+    키워드 리스트를 반환한다.
     """
     login_url = 'common:login'
     model = Keyword
@@ -89,6 +92,8 @@ class KeywordList(LoginRequiredMixin, ListView):
 
 class KeywordCreate(LoginRequiredMixin, CreateView):
     """
+    키워드 관리 페이지에서 사용한다.
+    키워드를 생성한다.
     """
     login_url = 'common:login'
     success_url = reverse_lazy('news:keyword')
@@ -114,6 +119,8 @@ class KeywordCreate(LoginRequiredMixin, CreateView):
 
 class KeywordUpdate(LoginRequiredMixin, UpdateView):
     """
+    키워드 관리 페이지에서 사용한다.
+    키워드를 수정한다.
     """
     login_url = 'common:login'
     success_url = reverse_lazy('news:keyword')
@@ -130,6 +137,8 @@ class KeywordUpdate(LoginRequiredMixin, UpdateView):
 @login_required(login_url='common:login')
 def keyword_delete(request, pk):
     """
+    키워드 관리 페이지에서 사용한다.
+    키워드를 삭제한다.
     """
     keyword = get_object_or_404(Keyword, pk=pk)
     if request.user == keyword.author:
@@ -141,8 +150,8 @@ def keyword_delete(request, pk):
 
 class RecipientList(LoginRequiredMixin, ListView):
     """
+    수신자 관리 페이지에서 사용한다.
     수신자 리스트를 반환한다.
-    수신자관리 페이지에서 사용한다.
     """
     login_url = 'common:login'
     model = Recipient
@@ -156,8 +165,8 @@ class RecipientList(LoginRequiredMixin, ListView):
 
 class RecipientCreate(LoginRequiredMixin, CreateView):
     """
+    수신자 관리 페이지에서 사용한다.
     수신자를 생성한다.
-    수신자관리 페이지에서 사용한다.
     """
     login_url = 'common:login'
     success_url = reverse_lazy('news:recipient')
@@ -167,7 +176,7 @@ class RecipientCreate(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         recipient_last = Recipient.objects.last()
         if recipient_last:
-            form.instance.order = recipient_last.pk + 1
+            form.instance.order = recipient_last.order + 1
         else:
             form.instance.order = 1
 
@@ -183,8 +192,8 @@ class RecipientCreate(LoginRequiredMixin, CreateView):
 
 class RecipientUpdate(LoginRequiredMixin, UpdateView):
     """
+    수신자 관리 페이지에서 사용한다.
     수신자를 수정한다.
-    수신자관리 페이지에서 사용한다.
     """
     login_url = 'common:login'
     success_url = reverse_lazy('news:recipient')
@@ -201,8 +210,8 @@ class RecipientUpdate(LoginRequiredMixin, UpdateView):
 @login_required(login_url='common:login')
 def recipient_delete(request, pk):
     """
+    수신자 관리 페이지에서 사용한다.
     수신자를 삭제한다.
-    수신자관리 페이지에서 사용한다.
     """
     recipient = get_object_or_404(Recipient, pk=pk)
     if request.user == recipient.author:
@@ -212,43 +221,19 @@ def recipient_delete(request, pk):
         raise PermissionDenied
 
 
-@login_required(login_url='common:login')
-def email_setting(request):
-    """
-    이메일 설정 정보를 반환한다.
-    이메일설정 페이지에서 사용한다.
-    """
-    email_send_times = None
-    work_hour = None
-    email_recipients = None
-
-    try:
-        settings = Setting.objects.get(author=request.user.id)
-
-        email_send_times = settings.email_send_time
-        work_hour = settings.work_hour
-        email_recipients = settings.email_recipient
-    except Setting.DoesNotExist:
-        pass
-
-    return render(
-        request,
-        'news/email_setting.html',
-        {
-            'email_send_times': email_send_times,
-            'work_hour': work_hour,
-            'email_recipients': email_recipients,
-        }
-    )
-
-
 class SiteCreateGenericAPIView(generics.CreateAPIView):
+    """
+    뉴스 검색 페이지에서 언론사를 생성하면 호출된다.
+    """
     serializer_class = SiteSerializer
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
 
 class SiteUpdateGenericAPIView(generics.UpdateAPIView):
+    """
+    뉴스 검색 페이지에서 언론사를 수정하면 호출된다.
+    """
     queryset = Site.objects.all()
     serializer_class = SiteSerializer
     authentication_classes = [SessionAuthentication, BasicAuthentication]
@@ -260,10 +245,73 @@ class SiteUpdateGenericAPIView(generics.UpdateAPIView):
 def share_news(request):
     """
     뉴스 검색 후 선택한 뉴스를 공유하면
-    지정된 수신자에게 선택한 뉴스를 이메일 발송한다.
+    지정된 수신자에게 선택한 뉴스를 이메일로 발송한다.
     """
     if request.method == 'POST':
         data = request.data
         utils.send_email_by_share(data)
         
         return JsonResponse({'result': 'success'})
+
+
+@login_required(login_url='common:login')
+def email_setting(request):
+    """
+    이메일설정 페이지에서 사용한다.
+    이메일 설정 정보를 반환한다.
+    """
+    current_user = request.user
+
+    # setting model을 조회한다.
+    try:
+        setting = Setting.objects.get(author=request.user.id)
+    except Setting.DoesNotExist:
+        setting = None
+
+    # 선택 가능한 이메일 수신자를 조회한다.
+    try:
+        recipients = Recipient.objects.filter(author=current_user)
+    except Recipient.DoesNotExist:
+        recipients = None
+
+    return render(
+        request,
+        'news/email_setting.html',
+        {
+            'setting': setting,
+            'setting_recipients': setting.email_recipients.all(),
+            'recipients': recipients,
+        }
+    )
+
+
+class SettingUpdate(LoginRequiredMixin, UpdateView):
+    """
+    이메일 설정 페이지에서 사용한다.
+    발송시간, 업무시간, 수신자를 수정한다.
+    """
+    login_url = 'common:login'
+    success_url = reverse_lazy('news:email_setting')
+    model = Setting
+    template_name = 'news/email_setting.html'
+    fields = ['email_send_time', 'work_hour', 'email_recipients']
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and request.user == self.get_object().author:
+            return super(SettingUpdate, self).dispatch(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
+
+    def form_valid(self, form):
+        print('form_valid')
+        response = super(SettingUpdate, self).form_valid(form)
+        self.object.email_recipients.clear()
+
+        email_recipients_str = self.request.POST.get('email_recipients_str')
+        if email_recipients_str:
+            _list = email_recipients_str.split(';')
+            for pk in _list:
+                recipient = Recipient.objects.get(pk=pk)
+                self.object.email_recipients.add(recipient)
+
+        return response

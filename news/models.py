@@ -3,6 +3,7 @@ from django.core.validators import MinValueValidator
 from django.contrib.auth.models import User
 from django.db.models import constraints
 from django.db.models.fields import CharField
+from django.db.models.fields.related import ManyToManyField
 
 
 class Keyword(models.Model):
@@ -36,13 +37,13 @@ class Recipient(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return self.email + '(' + self.name + ')'
     
     class Meta:
         ordering = ['order']
         constraints = [
             models.UniqueConstraint(
-                fields=['name', 'author'], name='unique name for author')
+                fields=['email', 'author'], name='unique email for author')
         ]
 
 
@@ -50,10 +51,9 @@ class Setting(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     email_send_time = CharField(
         max_length=100, verbose_name='메일발송시간', null=True, blank=True)
-    email_recipient = CharField(
-        max_length=200, verbose_name='메일수신자', null=True, blank=True)
     work_hour = CharField(
         max_length=50, verbose_name='업무시간', null=True, blank=True)
+    email_recipients = ManyToManyField(Recipient, blank=True)
 
     def __str__(self):
         return self.author.username
