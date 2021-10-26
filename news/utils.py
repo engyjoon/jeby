@@ -188,7 +188,7 @@ def send_email_by_schedule(current_time=None):
                 subject=mail_title,
                 message=None,
                 html_message=mail_content,
-                from_email='jebyhouse@gmail.com',
+                from_email='jebyhouse@naver.com',
                 recipient_list=recipients,
                 fail_silently=False,
             )
@@ -278,7 +278,7 @@ def send_email_by_share(data):
         subject=title,
         message=None,
         html_message=mail_content,
-        from_email='jebyhouse@gmail.com',
+        from_email='jebyhouse@naver.com',
         recipient_list=recipient,
         fail_silently=False,
     )
