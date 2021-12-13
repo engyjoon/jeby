@@ -65,7 +65,10 @@ $(document).ready(function () {
 
         var workTimeStart = $("#workTimeStart").val();
         var workTimeEnd = $("#workTimeEnd").val();
-        var workTime = workTimeStart + ";" + workTimeEnd;
+        var workTime = "";
+        if (workTimeStart !== "" && workTimeEnd !== "") {
+            workTime = workTimeStart + ";" + workTimeEnd;
+        }
 
         var emailAddresses = new Array();
         $(".email-address").each(function (idx) {
