@@ -1,12 +1,191 @@
 from datetime import timedelta, datetime, timezone
 import json
 from dateutil.parser import parse
+from django.contrib.auth import get_user_model
 from django.conf import settings
 from django.core.mail import send_mail
+from django.core.exceptions import ObjectDoesNotExist
 from .models import Setting, Keyword
 from .naverapi import get_news
 
 KST = timezone(timedelta(hours=9))
+
+
+def send_email_by_schedule_this_year(time=None):
+    """
+    OS Crond가 호출하는 함수이다.
+    current_time 매개변수가 없을 경우 datetime.now()를 현재 시간으로 사용한다.
+    current_time 매개변수의 "hh:mm" 형식의 문자열이다.
+    """
+    # time 매개변수가 None일 경우
+    # 현재 시간을 텍스트로 변환하여 current_time 변수에 저장한다.
+    now = datetime.now()
+    current_time = None
+    if time is None:
+        current_time = str(now.hour).zfill(2) + ":" + str(now.minute).zfill(2)
+
+    # imsi 사용자 설정값을 조회하여 메일을 발송한다.
+    try:
+        user = get_user_model().objects.get(username="imsi")
+    except ObjectDoesNotExist:
+        print("imsi 계정이 존재하지 않습니다.")
+        return None
+
+    user_settings = Setting.objects.filter(author=user)
+    for user_setting in user_settings:
+        # 이메일 발송 시간을 저장한다.
+        email_send_time = user_setting.email_send_time
+
+        # 이메일 수신자를 저장한다.
+        email_recipients = user_setting.email_recipients.all()
+
+        # 사용자가 설정한 키워드들을 조회한다. 메일 발송 여부가 True인 것만 조회한다.
+        keywords = Keyword.objects.filter(author=user_setting.author.id)
+        keywords = keywords.filter(mailing=True)
+
+        # 이메일 수신자, 키워드가 존재할 경우 아래 내용을 실행한다.
+        if email_recipients and keywords:
+            # 검색 시작 일시를 올해 1월 1일로 설정한다.
+            start_time = datetime(int(datetime.now().strftime("%Y")), 1, 1, tzinfo=KST)
+            end_time = None
+
+            # 사용자가 설정한 메일 발송 시간 텍스트를 전처리한다.
+            email_send_time = user_setting.email_send_time
+            if email_send_time != "" and email_send_time != None:
+                times = user_setting.email_send_time.split(";")
+
+            # 함수 호출 시 입력한 시간이 존재할 경우 입력한 시간을 end_time으로 설정한다.
+            if time:
+                _time = time.split(":")
+                current_time = time
+            # 함수 호출 시 입력한 시간이 없고, 현재 시간이 예약 시간에 있을 경우
+            # 현재 시간을 end_time으로 설정한다.
+            elif current_time in times:
+                _time = current_time.split(":")
+            # 다음 사용자를 처리한다.
+            else:
+                continue
+
+            end_time = now.replace(
+                hour=int(_time[0]), minute=int(_time[1]), second=0, tzinfo=KST
+            )
+            end_time = end_time + timedelta(seconds=-1)
+
+            # 사용자 이름은 제외하고 메일주소만 recipients 리스트에 입력한다.
+            recipients = []
+            for recipient in email_recipients:
+                recipients.append(recipient.email)
+
+            # 메일 제목을 작성한다.
+            # 함수 호출 시 입력한 시간을 사용한다.
+            _time = current_time.split(":")
+            _now = now.replace(
+                hour=int(_time[0]), minute=int(_time[1]), second=0, tzinfo=KST
+            )
+            mail_title = f"[공유] {_now.year}/{str(_now.month).zfill(2)}/{str(_now.day).zfill(2)} {str(_now.hour).zfill(2)}시 {str(_now.minute).zfill(2)}분 뉴스"
+
+            # 메일 본문을 작성한다.
+            mail_content = f"""
+                <html>
+                    <head>
+                        <style>
+                            body {{
+                                font-family: 'Malgun Gothic';
+                                font-size: 11pt;
+                            }}
+
+                            table, th, td {{
+                                border: 1px solid #6c757d;
+                                border-collapse: collapse;
+                            }}
+
+                            th, td {{
+                                padding: 5px 10px;
+                            }}
+                        </style>
+                    </head>
+                    <body>
+                        <div style="font-weight:bold; font-size:18pt; padding-bottom:0px; margin-bottom:5px;">
+                            {settings.EMAIL_TITLE2}
+                        </div>
+                        <div style="margin-bottom:10px;">
+                            <a href="{settings.SERVICE_URL}" target="_blank">{settings.SERVICE_URL}</a> (크롬 브라우저 사용 권장)
+                        </div>
+                        <div style="margin-bottom:20px;">
+                            검색 시작 : {start_time.strftime("%Y-%m-%d %H:%M:%S")} <br/>
+                            검색 종료 : {end_time.strftime("%Y-%m-%d %H:%M:%S")}
+                        </div>
+            """
+
+            # 네이버 검색 API를 사용하여 키워드를 차례로 검색한 후 news 리스트에 입력한다.
+            # start_time과 end_time을 인자로 입력하여 end_time부터 start_time까지 조회하도록 한다.
+            for keyword in keywords:
+                news = get_news(keyword.content, start_time, end_time, max_count=100)
+
+                mail_content += f"""
+                    <div>
+                        <div style="font-size:11pt;"><strong>[{keyword.title}]</strong></div>
+                        <div style="font-size:11pt;">
+                            검색어 &gt;&gt; {keyword.content}
+                        </div>
+                """
+
+                if news:
+                    mail_content += f"""
+                        <div>
+                            <table style="width:850px;">
+                                <tr style="background-color:#F0F0F0;">
+                                    <th style="width:20%; text-align:center; font-size:11pt;">언론사</th>
+                                    <th style="width:68%; text-align:center; font-size:11pt;">기사제목</th>
+                                    <th style="width:12%; text-align:center; font-size:11pt;">발행시간</th>
+                                </tr>
+                    """
+
+                    for new in news:
+                        sitename = new.get("sitename")
+                        if sitename == "unknown":
+                            sitename = "-"
+
+                        mail_content += f"""
+                            <tr>
+                                <td style="font-size:11pt; text-align:center;">{sitename}</td>
+                                <td style="font-size:11pt;">
+                                    <a href="{new.get('originallink')}">{new.get('title')}</a>
+                                </td>
+                                <td style="font-size:11pt; text-align:center;">{new.get('pubDate').strftime('%m/%d %H:%M')}</td>
+                            </tr>
+                        """
+
+                    mail_content += """
+                                </table>
+                            </div>
+                        </div>
+                        <br><br>
+                    """
+                else:
+                    mail_content += f"""
+                        <p>검색된 뉴스가 없습니다.</p>
+                        <br>
+                """
+
+            mail_content += f"""
+                    </body>
+                </html>
+            """
+
+            # 메일을 발송한다.
+            send_mail(
+                subject=mail_title,
+                message=None,
+                html_message=mail_content,
+                from_email="jebyhouse@naver.com",
+                recipient_list=recipients,
+                fail_silently=False,
+            )
+
+            print("메일 발송을 완료하였습니다.")
+
+    return None
 
 
 def send_email_by_schedule(current_time=None):

@@ -1,0 +1,1 @@
+set DJANGO_SETTINGS_MODULE=jeby_prj.settings.local

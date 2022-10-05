@@ -1,4 +1,18 @@
 {
-    "python.linting.flake8Enabled": true,
-    "python.linting.enabled": true
+    "editor.formatOnSave": true,
+    "python.formatting.provider": "black",
+    "python.linting.pylintEnabled": true,
+    "python.linting.pylintArgs": [
+        "--load-plugins pylint_django",
+        "--disable=C0111",
+        "--disable=unused-variable",
+        "--disable=unused-argument"
+    ],
+    "python.linting.enabled": true,
+    "editor.defaultFormatter": "batisteo.vscode-django",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.python",
+        "editor.formatOnPaste": false,
+        "editor.tabSize": 4
+    }
 }

@@ -27,10 +27,25 @@ def get_news_by_hour(keyword, start_hour: int = 24, end_hour: int = 0):
     return result
 
 
-def get_news(keyword, start_time: datetime = None, end_time: datetime = None):
+def get_news_from_january(keyword):
+    """
+    올해 1월 1일부터 현재까지 뉴스를 검색한다.
+    """
+    end_time = datetime.now(tz=KST)
+    start_time = datetime(int(datetime.now().strftime("%Y")), 1, 1, tzinfo=KST)
+
+    result = get_news(keyword, start_time, end_time)
+
+    return result
+
+
+def get_news(
+    keyword, start_time: datetime = None, end_time: datetime = None, max_count=100
+):
     """
     주어진 키워드 사용하여 네이버 검색 API를 끝까지 호출한다.
     start_time과 end_time이 지정될 경우 start_time과 end_time 구간 내 뉴스를 반환한다.
+    과거->현재 방향으로 검색한다. start_time이 end_time보다 오래된 시점이다.
     """
 
     start = 1
@@ -41,46 +56,46 @@ def get_news(keyword, start_time: datetime = None, end_time: datetime = None):
     news = []
     flag = True
     while flag:
-        _list = call_naverapi(keyword, display, start, 'date')
+        _list = call_naverapi(keyword, display, start, "date")
         if _list:
             for i in _list:
-                # end_time이 존재하고 end_time보다 pubDate가 클 경우
+                # end_time이 존재하고 end_time보다 뉴스 발행일시(pubDate)가 나중일 경우
                 # news 리스트에 입력하지 않는다.
-                if end_time and end_time < parse(i['pubDate']):
+                if end_time and end_time < parse(i["pubDate"]):
                     continue
 
-                # start_time이 존재하고 start_time보다 뉴스 발행시간이 작을 경우
+                # start_time이 존재하고 start_time보다 뉴스 발행일시가 작을 경우
                 # news 리스트에 뉴스 입력을 중지한다.
-                if start_time and start_time > parse(i['pubDate']):
+                if start_time and start_time > parse(i["pubDate"]):
                     flag = False
                     break
 
                 # 개별 뉴스에 키워드를 입력한다.
-                i['keyword'] = keyword
+                i["keyword"] = keyword
 
                 # 개별 뉴스의 발행시간을 datetime 형식으로 변환하여 다시 입력한다.
-                i['pubDate'] = parse(i['pubDate'])
+                i["pubDate"] = parse(i["pubDate"])
 
                 # 개별 뉴스에서 언론사 URI를 추출한다.
-                pattern = re.compile(r'^https?://([\w.-]*).*')
-                if i.get('originallink'):
-                    website = pattern.search(i.get('originallink'))
+                pattern = re.compile(r"^https?://([\w.-]*).*")
+                if i.get("originallink"):
+                    website = pattern.search(i.get("originallink"))
                 else:
-                    website = pattern.search(i.get('link'))
-                    i['originallink'] = i.get('link')
+                    website = pattern.search(i.get("link"))
+                    i["originallink"] = i.get("link")
 
-                # 개별 뉴스에 언론사 정보를 입력한다.
+                # 개별 뉴스에 언론사 정보를 추가한다.
                 if website is not None:
                     uri = website.group(1)
-                    i['siteuri'] = uri
+                    i["siteuri"] = uri
 
                     try:
-                        i['sitename'] = sites.get(address=uri)
-                        i['siteid'] = sites.get(address=uri).pk
+                        i["sitename"] = sites.get(address=uri)
+                        i["siteid"] = sites.get(address=uri).pk
                     except Site.DoesNotExist:
-                        i['sitename'] = 'unknown'
+                        i["sitename"] = "unknown"
                 else:
-                    print('URI 추출 실패')
+                    print("URI 추출 실패")
                     print(f'originallink : {i.get("originallink")}')
                     print(f'link : {i.get("link")}')
 
@@ -90,7 +105,7 @@ def get_news(keyword, start_time: datetime = None, end_time: datetime = None):
             # start에 100을 더한 후 다시 뉴스를 검색한다.
             if len(_list) == display:
                 start += 100
-                if start > 1000:
+                if start > max_count:
                     break
             else:
                 break
@@ -99,7 +114,7 @@ def get_news(keyword, start_time: datetime = None, end_time: datetime = None):
 
         # 네이버 검색 API를 초당 10건으로 제한하고 있기 때문에
         # HTTP 상태코드 429 (초당 호출 한도 초과 오류)
-        # 1회 메일 발송 후 일정 시간 동안 휴식한다.
+        # 필요 시 1회 메일 발송 후 일정 시간 동안 휴식한다.
         # sleep(0.5)
 
     return news
@@ -111,10 +126,10 @@ def call_naverapi(keyword, display, start, sort):
     """
 
     values = {
-        'query': keyword,
-        'display': display,
-        'start': start,
-        'sort': sort,
+        "query": keyword,
+        "display": display,
+        "start": start,
+        "sort": sort,
     }
 
     params = urllib.parse.urlencode(values, quote_via=urllib.parse.quote)
@@ -130,7 +145,7 @@ def call_naverapi(keyword, display, start, sort):
 
     if rescode == 200:
         response_body = response.read()
-        result = json.loads(response_body.decode('utf-8')).get('items')
+        result = json.loads(response_body.decode("utf-8")).get("items")
     else:
         print(rescode)
         result = None
