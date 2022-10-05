@@ -48,6 +48,7 @@ def send_email_by_schedule_this_year(time=None):
             # 검색 시작 일시를 올해 1월 1일로 설정한다.
             start_time = datetime(int(datetime.now().strftime("%Y")), 1, 1, tzinfo=KST)
             end_time = None
+            times = []
 
             # 사용자가 설정한 메일 발송 시간 텍스트를 전처리한다.
             email_send_time = user_setting.email_send_time
@@ -133,11 +134,11 @@ def send_email_by_schedule_this_year(time=None):
                 if news:
                     mail_content += f"""
                         <div>
-                            <table style="width:850px;">
+                            <table style="width:1000px;">
                                 <tr style="background-color:#F0F0F0;">
-                                    <th style="width:20%; text-align:center; font-size:11pt;">언론사</th>
-                                    <th style="width:68%; text-align:center; font-size:11pt;">기사제목</th>
-                                    <th style="width:12%; text-align:center; font-size:11pt;">발행시간</th>
+                                    <th style="width:200px; text-align:center; font-size:11pt;">언론사</th>
+                                    <th style="width:680px; text-align:center; font-size:11pt;">기사제목</th>
+                                    <th style="width:120px; text-align:center; font-size:11pt;">발행시간</th>
                                 </tr>
                     """
 
@@ -148,11 +149,18 @@ def send_email_by_schedule_this_year(time=None):
 
                         mail_content += f"""
                             <tr>
-                                <td style="font-size:11pt; text-align:center;">{sitename}</td>
+                                <td style="font-size:11pt; text-align:center;" rowspan="2">{sitename}</td>
                                 <td style="font-size:11pt;">
                                     <a href="{new.get('originallink')}">{new.get('title')}</a>
                                 </td>
-                                <td style="font-size:11pt; text-align:center;">{new.get('pubDate').strftime('%m/%d %H:%M')}</td>
+                                <td style="font-size:11pt; text-align:center;" rowspan="2">
+                                    {new.get('pubDate').strftime('%m/%d %H:%M')}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-size:11pt;">
+                                    {new.get('originallink')}
+                                </td>
                             </tr>
                         """
 
