@@ -26,12 +26,12 @@ def send_email_by_schedule_this_year(time=None):
 
     # imsi 사용자 설정값을 조회하여 메일을 발송한다.
     try:
-        user = get_user_model().objects.get(username="imsi")
+        imsi = get_user_model().objects.get(username="imsi")
     except ObjectDoesNotExist:
         print("imsi 계정이 존재하지 않습니다.")
         return None
 
-    user_settings = Setting.objects.filter(author=user)
+    user_settings = Setting.objects.filter(author=imsi)
     for user_setting in user_settings:
         # 이메일 발송 시간을 저장한다.
         email_send_time = user_setting.email_send_time
@@ -209,7 +209,12 @@ def send_email_by_schedule(current_time=None):
         current_time = str(now.hour).zfill(2) + ":" + str(now.minute).zfill(2)
 
     # 사용자 설정값을 조회하여 메일을 발송한다.
-    user_settings = Setting.objects.all()
+    try:
+        imsi = get_user_model().objects.get(username="imsi")
+    except ObjectDoesNotExist:
+        print("imsi 계정이 존재하지 않습니다.")
+
+    user_settings = Setting.objects.all().exclude(author=imsi)
     for user_setting in user_settings:
         # 이메일 발송 시간을 저장한다.
         email_send_time = user_setting.email_send_time
