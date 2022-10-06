@@ -22,6 +22,7 @@ a:hover {
 
 #recipient {
     height: 618px;
+    overflow-y: auto;
 }
 
 .email-address {
