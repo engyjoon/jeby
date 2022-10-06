@@ -40,7 +40,7 @@ def get_news_from_january(keyword):
 
 
 def get_news(
-    keyword, start_time: datetime = None, end_time: datetime = None, max_count=100
+    keyword, start_time: datetime = None, end_time: datetime = None, max_count=1000
 ):
     """
     주어진 키워드 사용하여 네이버 검색 API를 끝까지 호출한다.
