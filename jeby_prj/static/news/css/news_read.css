@@ -40,6 +40,10 @@ a:hover {
     color: #80808f;
 }
 
+#search-img i {
+    margin-top: 10px;
+}
+
 .news-item, 
 .news-item-selected {
     border-bottom: 1px solid #C5D7E6;
