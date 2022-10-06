@@ -121,7 +121,7 @@ def send_email_by_schedule_this_year(time=None):
             # 네이버 검색 API를 사용하여 키워드를 차례로 검색한 후 news 리스트에 입력한다.
             # start_time과 end_time을 인자로 입력하여 end_time부터 start_time까지 조회하도록 한다.
             for keyword in keywords:
-                news = get_news(keyword.content, start_time, end_time, max_count=100)
+                news = get_news(keyword.content, start_time, end_time, max_count=1000)
 
                 mail_content += f"""
                     <div>
